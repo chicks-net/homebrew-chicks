@@ -3,7 +3,7 @@ class ChicksTextTools < Formula
   homepage "https://github.com/chicks-net/chicks-home"
   url "https://github.com/chicks-net/chicks-home/archive/refs/tags/v42.0.tar.gz"
   sha256 "2594b4f1b3830e6f398fef4c84e44b104a92ad69c1a000bcc341145b141168d9"
-  license "GPL-2.0"
+  license "GPL-2.0-only"
 
   depends_on "lsof"
 
@@ -30,7 +30,7 @@ class ChicksTextTools < Formula
 
     # Test roll: multiple dice with total
     output = shell_output("#{bin}/roll 2d6")
-    assert_match(/total:\s+\d+\/12/, output)
+    assert_match(%r{total:\s+\d+/12}, output)
 
     # Test closefh: verify it runs (tests lsof dependency)
     output = shell_output("#{bin}/closefh /nonexistent/file.txt 2>&1")

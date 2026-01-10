@@ -29,6 +29,7 @@ test-chicks-text-tools:
 	TAP_DIR="/opt/homebrew/Library/Taps/chicks-net/homebrew-chicks"
 	mkdir -p "$TAP_DIR/Formula"
 	cp Formula/chicks-text-tools.rb "$TAP_DIR/Formula/"
+	chmod 644 "$TAP_DIR/Formula/chicks-text-tools.rb"
 
 	# Test installation
 	echo "{{GREEN}}Installing formula from source...{{NORMAL}}"
@@ -47,6 +48,10 @@ test-chicks-text-tools:
 	# Run formula tests
 	echo "{{GREEN}}Running formula test suite...{{NORMAL}}"
 	brew test chicks-text-tools
+
+	# Run brew audit
+	echo "{{GREEN}}Running brew audit...{{NORMAL}}"
+	brew audit --strict --online chicks-text-tools
 
 	echo "{{GREEN}}All tests passed!{{NORMAL}}"
 
