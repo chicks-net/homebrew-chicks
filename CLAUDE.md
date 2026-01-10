@@ -4,11 +4,52 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Purpose
 
-This is a GitHub repository template that implements best practices for open source projects. It's designed to be cloned and customized for new repositories. The template includes GitHub community standards compliance, automated workflows, and a command-line driven development process.
+This is a Homebrew tap repository for distributing Christopher Hicks' software via [Homebrew](https://brew.sh/). Users can install packages from this tap with:
+
+```bash
+brew tap chicks-net/chicks
+brew install chicks-net/chicks/<formula-name>
+```
+
+## Homebrew Tap Structure
+
+Homebrew taps follow a specific directory structure:
+
+- `Formula/*.rb` - Formula files for command-line tools and libraries
+- `Casks/*.rb` - Cask files for macOS applications (GUI apps)
+
+Currently this tap has no Formula or Cask files yet.
+
+## Creating Formula Files
+
+When adding new Formula files to this tap:
+
+1. Place them in a `Formula/` directory at the repository root
+2. Formula files should be named using the formula name (e.g., `foo.rb` for a formula named "foo")
+3. Use `brew create <URL>` as a starting point to generate a formula template
+4. Test locally with `brew install --build-from-source ./Formula/<name>.rb`
+5. Use `brew audit --strict --online <formula>` to check for issues
+
+Key Formula conventions:
+
+- Class names are CamelCase (e.g., `class FooBar < Formula`)
+- Use `url` and `sha256` for source downloads
+- Define `install` method for installation steps
+- Add `test do` block to verify installation
+
+## Creating Cask Files
+
+When adding Cask files for GUI applications:
+
+1. Place them in a `Casks/` directory at the repository root
+2. Cask files should be named using lowercase with hyphens (e.g., `foo-bar.rb`)
+3. Use `brew create --cask <URL>` to generate a template
+4. Test with `brew install --cask ./Casks/<name>.rb`
+5. Audit with `brew audit --cask --strict --online <cask-name>`
 
 ## Development Workflow
 
-This repo uses `just` (command runner) for all development tasks. The workflow is entirely command-line based using `just` and the GitHub CLI (`gh`).
+This repo uses `just` (command runner) for all development tasks. The workflow is command-line based using `just` and the GitHub CLI (`gh`).
 
 ### Standard development cycle
 
@@ -23,81 +64,24 @@ This repo uses `just` (command runner) for all development tasks. The workflow i
 - `just` or `just list` - Show all available recipes
 - `just prweb` - Open current PR in browser
 - `just release <version>` - Create a GitHub release with auto-generated notes
-- `just clean_readme` - Generate a clean README from template (strips template documentation)
 - `just compliance_check` - Run custom repo compliance checks
 - `just shellcheck` - Run shellcheck on all bash scripts in just recipes
-- `just utcdate` - Print UTC date in ISO format (used in branch names)
 
-## Architecture
+## GitHub Actions
 
-### Modular justfile structure
-
-The main `justfile` imports four modules:
-
-- `.just/compliance.just` - Custom compliance checks for repo health (validates all GitHub community standards)
-- `.just/gh-process.just` - Git/GitHub workflow automation (core PR lifecycle)
-- `.just/pr-hook.just` - Optional pre-PR hooks for project-specific automation (e.g., Hugo rebuilds)
-- `.just/shellcheck.just` - Shellcheck linting for bash scripts in just recipes
-
-### Git/GitHub workflow details
-
-The `.just/gh-process.just` module implements the entire PR lifecycle:
-
-- **Branch creation** - Dated branches with `$USER/YYYY-MM-DD-<name>` format
-- **PR creation** - First commit message becomes PR title, all commits listed in body
-- **Sanity checks** - Prevents empty PRs, enforces branch strategy via hidden recipes (`_on_a_branch`, `_has_commits`, `_main_branch`)
-- **AI integration** - After PR checks complete, displays GitHub Copilot and Claude Code review comments in terminal
-- **Merge automation** - Squash merge, delete remote branch, return to main, pull latest
-
-### Shellcheck integration
-
-The `.just/shellcheck.just` module extracts and validates bash scripts:
-
-- **Script extraction** - Uses awk to identify recipes with bash shebangs (`#!/usr/bin/env bash` or `#!/bin/bash`)
-- **Automatic detection** - Scans all justfiles in repo (main `justfile` and `.just/*.just`)
-- **Temporary file handling** - Creates temporary files for each script and runs shellcheck with `-x -s bash` flags
-- **Detailed reporting** - Shows which file and recipe each issue is in, with colored output
-- **Exit code** - Returns 1 if issues found, 0 if all scripts pass
-
-### GitHub Actions
-
-Six workflows run on PRs and pushes to main:
+Workflows run on PRs and pushes to main:
 
 - **markdownlint** - Enforces markdown standards using `markdownlint-cli2`
-- **checkov** - Security scanning for GitHub Actions (continues on error, outputs SARIF)
+- **checkov** - Security scanning for GitHub Actions
 - **actionlint** - Lints GitHub Actions workflow files
 - **auto-assign** - Automatically assigns issues/PRs to `chicks-net`
 - **claude-code-review** - Claude AI review automation
 - **claude** - Additional Claude integration
 
-### Markdown linting
+Run markdown linting locally: `markdownlint-cli2 **/*.md`
 
-Configuration in `.markdownlint.yml`:
+## Important Notes
 
-- MD013 (line length) is disabled
-- MD041 (first line h1) is disabled
-- MD042 (no empty links) is disabled
-- MD004 (list style) enforces dashes
-- MD010 (tabs) ignores code blocks
-
-Run locally: `markdownlint-cli2 **/*.md`
-
-## Template customization
-
-When using this template for a new project, search and replace:
-
-- `fini-net` → your GitHub org
-- `template-repo` → your repo name
-- `chicks-net` → your references (especially in `.github/workflows/auto-assign.yml`)
-
-Run `just clean_readme` to strip template documentation from README.
-
-## Important implementation notes
-
-- All git commands in `.just/gh-process.just` use standard git (no aliases required)
-- The `pr` recipe runs optional pre-PR hooks if `.just/pr-hook.just` exists
-- PR checks poll every 5 seconds for faster feedback
-- Release notes for workflow changes are tracked in `.just/RELEASE_NOTES.md`
-- The `.just` directory contains modular just recipes that can be copied to other projects for updates
-- just catches errors from commands when the recipe isn't a "#!" form that runs another scripting engine
-- just colors come from built-in constants <https://just.systems/man/en/constants.html>
+- This tap follows the naming convention `homebrew-chicks` which makes it accessible as `chicks-net/chicks`
+- All git commands use standard git (no aliases required)
+- The `.just` directory contains modular just recipes that can be copied to other projects
