@@ -17,7 +17,11 @@
       "Bash(just claude_review:*)",
       "Bash(brew info:*)",
       "Bash(brew cat:*)",
-      "Bash(brew search:*)"
+      "Bash(brew search:*)",
+      "Bash(gh release view:*)",
+      "Bash(just uninstall-formula:*)",
+      "Bash(just test-chicks-text-tools:*)",
+      "Bash(just uninstall-chicks-text-tools:*)"
     ],
     "deny": [],
     "ask": []
