@@ -7,6 +7,27 @@
 
 Install my software with [Homebrew](https://brew.sh/).
 
+## Installation
+
+Install the tap:
+
+```bash
+brew tap chicks-net/chicks
+```
+
+Install chicks-text-tools:
+
+```bash
+brew install chicks-net/chicks/chicks-text-tools
+```
+
+## Available Tools
+
+- **comify** - Convert newline-separated values to comma-separated
+- **ruler** - Display character ruler for counting columns
+- **roll** - D&D dice roller (supports notation like 2d6, d20)
+- **closefh** - Close file descriptors (requires lsof)
+
 ## Contributing
 
 - [Code of Conduct](.github/CODE_OF_CONDUCT.md)
