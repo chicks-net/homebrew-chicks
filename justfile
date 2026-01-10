@@ -26,8 +26,8 @@ test-chicks-text-tools:
 
 	# Copy local formula to tapped repository for testing
 	echo "{{GREEN}}Copying formula to tap directory...{{NORMAL}}"
-	BREW_PREFIX="$(brew --prefix)"
-	TAP_DIR="$BREW_PREFIX/Library/Taps/chicks-net/homebrew-chicks"
+	BREW_REPO="$(brew --repository)"
+	TAP_DIR="$BREW_REPO/Library/Taps/chicks-net/homebrew-chicks"
 	if [[ ! -d "$TAP_DIR" ]]; then
 		echo "{{RED}}Error: Tap directory not found at $TAP_DIR{{NORMAL}}"
 		exit 1
