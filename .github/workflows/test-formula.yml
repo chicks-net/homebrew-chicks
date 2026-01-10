@@ -1,0 +1,50 @@
+name: Test Formula
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+# global permissions
+permissions: {}
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Install Homebrew on Linux and Windows (macOS has it pre-installed)
+      - name: Install Homebrew
+        if: runner.os != 'macOS'
+        run: |
+          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        shell: bash
+
+      # Add Homebrew to PATH for Linux
+      - name: Setup Homebrew PATH (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          echo "/home/linuxbrew/.linuxbrew/bin" >> $GITHUB_PATH
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+        shell: bash
+
+      # Install just command runner
+      - name: Install just
+        run: brew install just
+        shell: bash
+
+      # Run the formula tests
+      - name: Test chicks-text-tools formula
+        run: just test-chicks-text-tools
+        shell: bash
