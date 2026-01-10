@@ -5,7 +5,7 @@
 ![GitHub License](https://img.shields.io/github/license/chicks-net/homebrew-chicks)
 ![GitHub watchers](https://img.shields.io/github/watchers/chicks-net/homebrew-chicks)
 
-A good starting place for something. (TODO)
+Install my software with [Homebrew](https://brew.sh/).
 
 ## Contributing
 
