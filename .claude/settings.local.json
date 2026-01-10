@@ -6,6 +6,7 @@
       "WebFetch(domain:github.com)",
       "WebFetch(domain:raw.githubusercontent.com)",
       "WebFetch(domain:en.wikipedia.org)",
+      "WebFetch(domain:docs.brew.sh)",
       "WebSearch",
       "Bash(markdownlint-cli2:*)",
       "Bash(gh pr view:*)",
@@ -13,7 +14,10 @@
       "Bash(git log:*)",
       "Bash(identify:*)",
       "Bash(just shellcheck:*)",
-      "Bash(just claude_review:*)"
+      "Bash(just claude_review:*)",
+      "Bash(brew info:*)",
+      "Bash(brew cat:*)",
+      "Bash(brew search:*)"
     ],
     "deny": [],
     "ask": []
