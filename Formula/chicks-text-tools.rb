@@ -26,7 +26,7 @@ class ChicksTextTools < Formula
 
     # Test roll: single die (1-6)
     output = shell_output("#{bin}/roll d6")
-    assert_match(/roll 1: [1-6]/, output)
+    assert_match(/roll 1: [1-6]$/, output)
 
     # Test roll: multiple dice with total
     output = shell_output("#{bin}/roll 2d6")
