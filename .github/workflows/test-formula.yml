@@ -14,7 +14,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        # Windows excluded: Homebrew only supports macOS and Linux
+        os: [ubuntu-latest, macos-latest]
 
     runs-on: ${{ matrix.os }}
 
@@ -24,9 +25,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Install Homebrew on Linux and Windows (macOS has it pre-installed)
+      # Install Homebrew on Linux (macOS has it pre-installed)
       - name: Install Homebrew
-        if: runner.os != 'macOS'
+        if: runner.os == 'Linux'
         run: |
           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         shell: bash
