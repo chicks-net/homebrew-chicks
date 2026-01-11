@@ -1,4 +1,4 @@
-name: Test Formula
+name: Brew Formula
 
 on:
   push:
