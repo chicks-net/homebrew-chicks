@@ -25,18 +25,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Install Homebrew on Linux (macOS has it pre-installed)
-      - name: Install Homebrew
-        if: runner.os == 'Linux'
-        run: |
-          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        shell: bash
-
-      # Add Homebrew to PATH for Linux
-      - name: Setup Homebrew PATH (Linux)
-        if: runner.os == 'Linux'
-        run: echo "/home/linuxbrew/.linuxbrew/bin" >> "$GITHUB_PATH"
-        shell: bash
+      # Setup Homebrew (installs on Linux, updates on macOS)
+      - name: Setup Homebrew
+        uses: Homebrew/actions/setup-homebrew@master
 
       # Install just command runner
       - name: Install just
