@@ -18,6 +18,12 @@ brew install chicks-net/chicks/<formula-name>
   - Depends on `lsof`
   - Formula file: `Formula/chicks-text-tools.rb`
 
+- **chicks-git-tools** - Git/GitHub automation utilities (repos-summary, github_fix_https, apply-ruleset)
+  - Source: <https://github.com/chicks-net/chicks-home>
+  - Depends on `git`, `gh`, `jq`
+  - Formula file: `Formula/chicks-git-tools.rb`
+  - Includes GitHub ruleset templates in `share/chicks-git-tools/rulesets/`
+
 ## Testing Formulas
 
 The complete formula test suite uses `just` command runner:
@@ -40,6 +46,18 @@ To uninstall:
 
 ```bash
 just uninstall-chicks-text-tools
+```
+
+For chicks-git-tools:
+
+```bash
+just test-chicks-git-tools
+```
+
+To uninstall:
+
+```bash
+just uninstall-chicks-git-tools
 ```
 
 ## Creating New Formula Files

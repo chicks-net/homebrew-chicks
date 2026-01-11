@@ -75,3 +75,73 @@ test-chicks-text-tools:
 [group('Formula')]
 uninstall-chicks-text-tools:
 	brew uninstall chicks-text-tools || echo "{{YELLOW}}Formula not installed{{NORMAL}}"
+
+# Test the chicks-git-tools formula
+[group('Formula')]
+test-chicks-git-tools:
+	#!/usr/bin/env bash
+	set -euo pipefail
+	echo "{{BLUE}}Testing chicks-git-tools formula...{{NORMAL}}"
+
+	# Ensure tap exists
+	if ! brew tap | grep -q "chicks-net/chicks"; then
+		echo "{{GREEN}}Tapping chicks-net/chicks...{{NORMAL}}"
+		brew tap chicks-net/chicks
+	fi
+
+	# Copy local formula to tapped repository for testing
+	echo "{{GREEN}}Copying formula to tap directory...{{NORMAL}}"
+	BREW_REPO="$(brew --repository)"
+	TAP_DIR="$BREW_REPO/Library/Taps/chicks-net/homebrew-chicks"
+	if [[ ! -d "$TAP_DIR" ]]; then
+		echo "{{RED}}Error: Tap directory not found at $TAP_DIR{{NORMAL}}"
+		exit 1
+	fi
+	mkdir -p "$TAP_DIR/Formula"
+
+	# Only copy if source and destination are different files
+	if [[ ! Formula/chicks-git-tools.rb -ef "$TAP_DIR/Formula/chicks-git-tools.rb" ]]; then
+		cp Formula/chicks-git-tools.rb "$TAP_DIR/Formula/"
+		chmod 644 "$TAP_DIR/Formula/chicks-git-tools.rb"
+		echo "{{GREEN}}Formula copied successfully{{NORMAL}}"
+	else
+		echo "{{GREEN}}Formula already in place (symlinked tap directory){{NORMAL}}"
+	fi
+
+	# Test installation
+	echo "{{GREEN}}Installing formula from source...{{NORMAL}}"
+	brew install --build-from-source chicks-net/chicks/chicks-git-tools
+
+	# Verify tools work
+	echo "{{GREEN}}Testing repos-summary...{{NORMAL}}"
+	repos-summary 2>&1 | head -5 || true
+
+	echo "{{GREEN}}Testing github_fix_https...{{NORMAL}}"
+	github_fix_https 2>&1 | head -3 || true
+
+	echo "{{GREEN}}Testing apply-ruleset...{{NORMAL}}"
+	apply-ruleset 2>&1 || true
+
+	# Verify rulesets are installed
+	echo "{{GREEN}}Checking for bundled rulesets...{{NORMAL}}"
+	PKGSHARE="$(brew --prefix)/share/chicks-git-tools"
+	ls -la "$PKGSHARE/rulesets/"
+
+	# Run formula tests
+	echo "{{GREEN}}Running formula test suite...{{NORMAL}}"
+	brew test chicks-git-tools
+
+	# Run brew audit
+	echo "{{GREEN}}Running brew audit...{{NORMAL}}"
+	brew audit --strict --online chicks-git-tools
+
+	# Run brew style
+	echo "{{GREEN}}Running brew style...{{NORMAL}}"
+	brew style Formula/*.rb
+
+	echo "{{GREEN}}All tests passed!{{NORMAL}}"
+
+# Uninstall the chicks-git-tools formula
+[group('Formula')]
+uninstall-chicks-git-tools:
+	brew uninstall chicks-git-tools || echo "{{YELLOW}}Formula not installed{{NORMAL}}"

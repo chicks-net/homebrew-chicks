@@ -21,12 +21,51 @@ Install chicks-text-tools:
 brew install chicks-net/chicks/chicks-text-tools
 ```
 
-## Available Tools
+## Available Formulas
+
+### chicks-text-tools
+
+Text manipulation utilities:
 
 - **comify** - Convert newline-separated values to comma-separated
 - **ruler** - Display character ruler for counting columns
 - **roll** - D&D dice roller (supports notation like 2d6, d20)
 - **closefh** - Close file descriptors (requires lsof)
+
+Installation:
+
+```bash
+brew install chicks-net/chicks/chicks-text-tools
+```
+
+### chicks-git-tools
+
+Git and GitHub automation utilities:
+
+- **repos-summary** - Comprehensive repository health checker
+- **github_fix_https** - Convert HTTPS repo clones to SSH
+- **apply-ruleset** - Apply GitHub rulesets via API
+
+Installation:
+
+```bash
+brew install chicks-net/chicks/chicks-git-tools
+```
+
+Usage with bundled rulesets:
+
+```bash
+# Find installed rulesets
+RULESETS="$(brew --prefix)/share/chicks-git-tools/rulesets"
+
+# Apply default linear history ruleset
+apply-ruleset "$RULESETS/default-linear.json" my-repo
+
+# Apply pull request requirement ruleset
+apply-ruleset "$RULESETS/require-pr.json" my-repo
+```
+
+**Note:** `apply-ruleset` works on public repos (requires GitHub Pro for private repos).
 
 ## Contributing
 
