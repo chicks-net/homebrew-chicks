@@ -35,9 +35,7 @@ jobs:
       # Add Homebrew to PATH for Linux
       - name: Setup Homebrew PATH (Linux)
         if: runner.os == 'Linux'
-        run: |
-          echo "/home/linuxbrew/.linuxbrew/bin" >> "$GITHUB_PATH"
-          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+        run: echo "/home/linuxbrew/.linuxbrew/bin" >> "$GITHUB_PATH"
         shell: bash
 
       # Install just command runner
