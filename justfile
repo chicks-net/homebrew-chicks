@@ -26,15 +26,22 @@ test-chicks-text-tools:
 
 	# Copy local formula to tapped repository for testing
 	echo "{{GREEN}}Copying formula to tap directory...{{NORMAL}}"
-	BREW_PREFIX="$(brew --prefix)"
-	TAP_DIR="$BREW_PREFIX/Library/Taps/chicks-net/homebrew-chicks"
+	BREW_REPO="$(brew --repository)"
+	TAP_DIR="$BREW_REPO/Library/Taps/chicks-net/homebrew-chicks"
 	if [[ ! -d "$TAP_DIR" ]]; then
 		echo "{{RED}}Error: Tap directory not found at $TAP_DIR{{NORMAL}}"
 		exit 1
 	fi
 	mkdir -p "$TAP_DIR/Formula"
-	cp Formula/chicks-text-tools.rb "$TAP_DIR/Formula/"
-	chmod 644 "$TAP_DIR/Formula/chicks-text-tools.rb"
+
+	# Only copy if source and destination are different files
+	if [[ ! Formula/chicks-text-tools.rb -ef "$TAP_DIR/Formula/chicks-text-tools.rb" ]]; then
+		cp Formula/chicks-text-tools.rb "$TAP_DIR/Formula/"
+		chmod 644 "$TAP_DIR/Formula/chicks-text-tools.rb"
+		echo "{{GREEN}}Formula copied successfully{{NORMAL}}"
+	else
+		echo "{{GREEN}}Formula already in place (symlinked tap directory){{NORMAL}}"
+	fi
 
 	# Test installation
 	echo "{{GREEN}}Installing formula from source...{{NORMAL}}"

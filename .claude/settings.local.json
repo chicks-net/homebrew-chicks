@@ -21,7 +21,9 @@
       "Bash(gh release view:*)",
       "Bash(just uninstall-formula:*)",
       "Bash(just test-chicks-text-tools:*)",
-      "Bash(just uninstall-chicks-text-tools:*)"
+      "Bash(just uninstall-chicks-text-tools:*)",
+      "Bash(gh run list:*)",
+      "Bash(gh run view:*)"
     ],
     "deny": [],
     "ask": []
