@@ -5,7 +5,9 @@
 ![GitHub License](https://img.shields.io/github/license/chicks-net/homebrew-chicks)
 ![GitHub watchers](https://img.shields.io/github/watchers/chicks-net/homebrew-chicks)
 
-Install my software with [Homebrew](https://brew.sh/).
+Install some of my software with [Homebrew](https://brew.sh/).
+
+![Superfluous AI image, thanks to Nano Banana and Galaxy.AI](docs/flamingo-brewery-tap-with-chicks.jpg)
 
 ## Installation
 
