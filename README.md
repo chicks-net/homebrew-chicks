@@ -15,28 +15,12 @@ Install the tap:
 brew tap chicks-net/chicks
 ```
 
-Install chicks-text-tools:
-
-```bash
-brew install chicks-net/chicks/chicks-text-tools
-```
-
 ## Available Formulas
 
-### chicks-text-tools
-
-Text manipulation utilities:
-
-- **comify** - Convert newline-separated values to comma-separated
-- **ruler** - Display character ruler for counting columns
-- **roll** - D&D dice roller (supports notation like 2d6, d20)
-- **closefh** - Close file descriptors (requires lsof)
-
-Installation:
-
-```bash
-brew install chicks-net/chicks/chicks-text-tools
-```
+Here are a couple of sets of tools that you might find interesting.
+More formula
+[are planned](https://github.com/chicks-net/homebrew-chicks/issues).
+Feedback is welcomed.
 
 ### chicks-git-tools
 
@@ -66,6 +50,21 @@ apply-ruleset "$RULESETS/require-pr.json" my-repo
 ```
 
 **Note:** `apply-ruleset` works on public repos (requires GitHub Pro for private repos).
+
+### chicks-text-tools
+
+Text manipulation utilities:
+
+- **comify** - Convert newline-separated values to comma-separated
+- **ruler** - Display character ruler for counting columns
+- **roll** - D&D dice roller (supports notation like 2d6, d20)
+- **closefh** - Close file descriptors (requires lsof)
+
+Installation:
+
+```bash
+brew install chicks-net/chicks/chicks-text-tools
+```
 
 ## Contributing
 
