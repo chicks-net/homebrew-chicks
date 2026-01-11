@@ -65,6 +65,10 @@ test-chicks-text-tools:
 	echo "{{GREEN}}Running brew audit...{{NORMAL}}"
 	brew audit --strict --online chicks-text-tools
 
+	# Run brew style
+	echo "{{GREEN}}Running brew style...{{NORMAL}}"
+	brew style Formula/*.rb
+
 	echo "{{GREEN}}All tests passed!{{NORMAL}}"
 
 # Uninstall the chicks-text-tools formula
