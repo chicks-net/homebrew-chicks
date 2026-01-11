@@ -33,8 +33,15 @@ test-chicks-text-tools:
 		exit 1
 	fi
 	mkdir -p "$TAP_DIR/Formula"
-	cp Formula/chicks-text-tools.rb "$TAP_DIR/Formula/"
-	chmod 644 "$TAP_DIR/Formula/chicks-text-tools.rb"
+
+	# Only copy if source and destination are different files
+	if [[ ! Formula/chicks-text-tools.rb -ef "$TAP_DIR/Formula/chicks-text-tools.rb" ]]; then
+		cp Formula/chicks-text-tools.rb "$TAP_DIR/Formula/"
+		chmod 644 "$TAP_DIR/Formula/chicks-text-tools.rb"
+		echo "{{GREEN}}Formula copied successfully{{NORMAL}}"
+	else
+		echo "{{GREEN}}Formula already in place (symlinked tap directory){{NORMAL}}"
+	fi
 
 	# Test installation
 	echo "{{GREEN}}Installing formula from source...{{NORMAL}}"
