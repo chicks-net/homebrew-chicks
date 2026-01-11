@@ -7,7 +7,7 @@
 
 Install some of my software with [Homebrew](https://brew.sh/).
 
-![Superflous AI image, thanks to Nano Banana and Galaxy.AI](docs/flamingo-brewery-tap-with-chicks.jpg)
+![Superfluous AI image, thanks to Nano Banana and Galaxy.AI](docs/flamingo-brewery-tap-with-chicks.jpg)
 
 ## Installation
 
