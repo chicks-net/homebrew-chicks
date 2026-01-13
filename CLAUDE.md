@@ -24,6 +24,11 @@ brew install chicks-net/chicks/<formula-name>
   - Formula file: `Formula/chicks-git-tools.rb`
   - Includes GitHub ruleset templates in `share/chicks-git-tools/rulesets/`
 
+- **chicks-monitoring-tools** - System and network monitoring utilities (watch_constate, watch_zk_conns, host_scanner, haproxy_stats, ip2smokeping)
+  - Source: <https://github.com/chicks-net/chicks-home>
+  - Runtime requirements: `netstat` (pre-installed on macOS), optional Perl modules (DateTime, Net::Telnet)
+  - Formula file: `Formula/chicks-monitoring-tools.rb`
+
 ## Testing Formulas
 
 The complete formula test suite uses `just` command runner:
@@ -58,6 +63,18 @@ To uninstall:
 
 ```bash
 just uninstall-chicks-git-tools
+```
+
+For chicks-monitoring-tools:
+
+```bash
+just test-chicks-monitoring-tools
+```
+
+To uninstall:
+
+```bash
+just uninstall-chicks-monitoring-tools
 ```
 
 ## Creating New Formula Files

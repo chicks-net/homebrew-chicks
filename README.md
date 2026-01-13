@@ -53,6 +53,22 @@ apply-ruleset "$RULESETS/require-pr.json" my-repo
 
 **Note:** `apply-ruleset` works on public repos (requires GitHub Pro for private repos).
 
+### chicks-monitoring-tools
+
+System and network monitoring utilities:
+
+- **watch_constate** - Monitor network connection states (like vmstat but for connections)
+- **watch_zk_conns** - ZooKeeper connection monitoring
+- **host_scanner** - Network host scanning and discovery
+- **haproxy_stats** - HAProxy statistics monitoring
+- **ip2smokeping** - IP to Smokeping integration
+
+Installation:
+
+```bash
+brew install chicks-net/chicks/chicks-monitoring-tools
+```
+
 ### chicks-text-tools
 
 Text manipulation utilities:
