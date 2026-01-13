@@ -27,7 +27,9 @@
       "Bash(just test-chicks-text-tools:*)",
       "Bash(just uninstall-chicks-text-tools:*)",
       "Bash(just test-chicks-git-tools:*)",
-      "Bash(just uninstall-chicks-git-tools:*)"
+      "Bash(just uninstall-chicks-git-tools:*)",
+      "Bash(just test-chicks-monitoring-tools:*)",
+      "Bash(just uninstall-chicks-monitoring-tools:*)"
     ],
     "deny": [],
     "ask": []
