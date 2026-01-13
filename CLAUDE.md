@@ -26,7 +26,7 @@ brew install chicks-net/chicks/<formula-name>
 
 - **chicks-monitoring-tools** - System and network monitoring utilities (watch_constate, watch_zk_conns, graph_constate, host_scanner, haproxy_stats, ip2smokeping)
   - Source: <https://github.com/chicks-net/chicks-home>
-  - Depends on `lsof`
+  - Runtime requirements: `netstat` (pre-installed on macOS), optional Perl modules (DateTime, Chart::Strip, Net::Telnet)
   - Formula file: `Formula/chicks-monitoring-tools.rb`
 
 ## Testing Formulas

@@ -5,8 +5,6 @@ class ChicksMonitoringTools < Formula
   sha256 "2594b4f1b3830e6f398fef4c84e44b104a92ad69c1a000bcc341145b141168d9"
   license "GPL-2.0-only"
 
-  depends_on "lsof"
-
   def install
     bin.install "bin/watch_constate"
     bin.install "bin/watch_zk_conns"
@@ -14,6 +12,17 @@ class ChicksMonitoringTools < Formula
     bin.install "bin/host_scanner"
     bin.install "bin/haproxy_stats"
     bin.install "bin/ip2smokeping"
+  end
+
+  def caveats
+    <<~EOS
+      Some tools require additional dependencies:
+      - watch_constate and watch_zk_conns require netstat (pre-installed on macOS)
+      - Perl scripts may require CPAN modules: DateTime, Chart::Strip, Net::Telnet
+
+      Install Perl modules with:
+        cpan DateTime Chart::Strip Net::Telnet
+    EOS
   end
 
   test do
