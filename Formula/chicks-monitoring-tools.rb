@@ -8,7 +8,6 @@ class ChicksMonitoringTools < Formula
   def install
     bin.install "bin/watch_constate"
     bin.install "bin/watch_zk_conns"
-    bin.install "bin/graph_constate"
     bin.install "bin/host_scanner"
     bin.install "bin/haproxy_stats"
     bin.install "bin/ip2smokeping"
@@ -18,10 +17,10 @@ class ChicksMonitoringTools < Formula
     <<~EOS
       Some tools require additional dependencies:
       - watch_constate and watch_zk_conns require netstat (pre-installed on macOS)
-      - Perl scripts may require CPAN modules: DateTime, Chart::Strip, Net::Telnet
+      - Perl scripts may require CPAN modules: DateTime, Net::Telnet
 
       Install Perl modules with:
-        cpan DateTime Chart::Strip Net::Telnet
+        cpan DateTime Net::Telnet
     EOS
   end
 
@@ -33,10 +32,6 @@ class ChicksMonitoringTools < Formula
     # Test watch_zk_conns is installed and executable
     assert_path_exists bin/"watch_zk_conns"
     assert_predicate bin/"watch_zk_conns", :executable?
-
-    # Test graph_constate is installed and executable
-    assert_path_exists bin/"graph_constate"
-    assert_predicate bin/"graph_constate", :executable?
 
     # Test host_scanner is installed and executable
     assert_path_exists bin/"host_scanner"

@@ -59,7 +59,6 @@ System and network monitoring utilities:
 
 - **watch_constate** - Monitor network connection states (like vmstat but for connections)
 - **watch_zk_conns** - ZooKeeper connection monitoring
-- **graph_constate** - Graph connection states over time
 - **host_scanner** - Network host scanning and discovery
 - **haproxy_stats** - HAProxy statistics monitoring
 - **ip2smokeping** - IP to Smokeping integration
