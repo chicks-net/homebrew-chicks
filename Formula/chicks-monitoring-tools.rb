@@ -19,7 +19,9 @@ class ChicksMonitoringTools < Formula
       - watch_constate and watch_zk_conns require netstat (pre-installed on macOS)
       - Perl scripts may require CPAN modules: DateTime, Net::Telnet
 
-      Install Perl modules with:
+      Install Perl modules with cpanm (recommended) or cpan:
+        cpanm DateTime Net::Telnet
+        # or
         cpan DateTime Net::Telnet
     EOS
   end
