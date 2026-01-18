@@ -29,6 +29,12 @@ brew install chicks-net/chicks/<formula-name>
   - Runtime requirements: `netstat` (pre-installed on macOS), optional Perl modules (DateTime, Net::Telnet)
   - Formula file: `Formula/chicks-monitoring-tools.rb`
 
+- **google-plus-posts-dumper** - Google+ Takeout to Markdown converter
+  - Source: <https://github.com/chicks-net/google-plus-posts-dumper>
+  - Depends on `rust` (build-time only)
+  - Formula file: `Formula/google-plus-posts-dumper.rb`
+  - First Rust-based formula in the tap
+
 ## Testing Formulas
 
 The complete formula test suite uses `just` command runner:
@@ -75,6 +81,20 @@ To uninstall:
 
 ```bash
 just uninstall-chicks-monitoring-tools
+```
+
+For google-plus-posts-dumper:
+
+```bash
+just test-google-plus-posts-dumper
+```
+
+**Note:** This is a Rust project and will take several minutes to compile from source.
+
+To uninstall:
+
+```bash
+just uninstall-google-plus-posts-dumper
 ```
 
 ## Creating New Formula Files
