@@ -219,3 +219,62 @@ test-chicks-monitoring-tools:
 [group('Formula')]
 uninstall-chicks-monitoring-tools:
 	brew uninstall chicks-monitoring-tools || echo "{{YELLOW}}Formula not installed{{NORMAL}}"
+
+# Test the google-plus-posts-dumper formula
+[group('Formula')]
+test-google-plus-posts-dumper:
+	#!/usr/bin/env bash
+	set -euo pipefail
+	echo "{{BLUE}}Testing google-plus-posts-dumper formula...{{NORMAL}}"
+
+	# Ensure tap exists
+	if ! brew tap | grep -q "chicks-net/chicks"; then
+		echo "{{GREEN}}Tapping chicks-net/chicks...{{NORMAL}}"
+		brew tap chicks-net/chicks
+	fi
+
+	# Copy local formula to tapped repository
+	echo "{{GREEN}}Copying formula to tap directory...{{NORMAL}}"
+	BREW_REPO="$(brew --repository)"
+	TAP_DIR="$BREW_REPO/Library/Taps/chicks-net/homebrew-chicks"
+	if [[ ! -d "$TAP_DIR" ]]; then
+		echo "{{RED}}Error: Tap directory not found at $TAP_DIR{{NORMAL}}"
+		exit 1
+	fi
+	mkdir -p "$TAP_DIR/Formula"
+
+	# Only copy if source and destination are different
+	if [[ ! Formula/google-plus-posts-dumper.rb -ef "$TAP_DIR/Formula/google-plus-posts-dumper.rb" ]]; then
+		cp Formula/google-plus-posts-dumper.rb "$TAP_DIR/Formula/"
+		chmod 644 "$TAP_DIR/Formula/google-plus-posts-dumper.rb"
+		echo "{{GREEN}}Formula copied successfully{{NORMAL}}"
+	else
+		echo "{{GREEN}}Formula already in place (symlinked tap directory){{NORMAL}}"
+	fi
+
+	# Install formula (NOTE: Rust compilation takes several minutes)
+	echo "{{GREEN}}Installing formula from source (this may take a few minutes)...{{NORMAL}}"
+	brew install --build-from-source chicks-net/chicks/google-plus-posts-dumper
+
+	# Verify tool is installed
+	echo "{{GREEN}}Verifying google-plus-posts-dumper is installed...{{NORMAL}}"
+	which google-plus-posts-dumper
+
+	# Run formula tests
+	echo "{{GREEN}}Running formula test suite...{{NORMAL}}"
+	brew test google-plus-posts-dumper
+
+	# Run brew audit
+	echo "{{GREEN}}Running brew audit...{{NORMAL}}"
+	brew audit --strict --online google-plus-posts-dumper
+
+	# Run brew style
+	echo "{{GREEN}}Running brew style...{{NORMAL}}"
+	brew style Formula/*.rb
+
+	echo "{{GREEN}}All tests passed!{{NORMAL}}"
+
+# Uninstall the google-plus-posts-dumper formula
+[group('Formula')]
+uninstall-google-plus-posts-dumper:
+	brew uninstall google-plus-posts-dumper || echo "{{YELLOW}}Formula not installed{{NORMAL}}"

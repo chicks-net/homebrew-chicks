@@ -29,7 +29,11 @@
       "Bash(just test-chicks-git-tools:*)",
       "Bash(just uninstall-chicks-git-tools:*)",
       "Bash(just test-chicks-monitoring-tools:*)",
-      "Bash(just uninstall-chicks-monitoring-tools:*)"
+      "Bash(just uninstall-chicks-monitoring-tools:*)",
+      "Bash(gh issue create:*)",
+      "Bash(gh repo view:*)",
+      "Bash(just test-google-plus-posts-dumper:*)",
+      "Bash(just uninstall-google-plus-posts-dumper)"
     ],
     "deny": [],
     "ask": []
