@@ -278,3 +278,62 @@ test-google-plus-posts-dumper:
 [group('Formula')]
 uninstall-google-plus-posts-dumper:
 	brew uninstall google-plus-posts-dumper || echo "{{YELLOW}}Formula not installed{{NORMAL}}"
+
+# Test the gh-observer cask
+[group('Cask')]
+test-gh-observer:
+	#!/usr/bin/env bash
+	set -euo pipefail
+	echo "{{BLUE}}Testing gh-observer cask...{{NORMAL}}"
+
+	# Ensure tap exists
+	if ! brew tap | grep -q "chicks-net/chicks"; then
+		echo "{{GREEN}}Tapping chicks-net/chicks...{{NORMAL}}"
+		brew tap chicks-net/chicks
+	fi
+
+	# Copy local cask to tapped repository for testing
+	echo "{{GREEN}}Copying cask to tap directory...{{NORMAL}}"
+	BREW_REPO="$(brew --repository)"
+	TAP_DIR="$BREW_REPO/Library/Taps/chicks-net/homebrew-chicks"
+	if [[ ! -d "$TAP_DIR" ]]; then
+		echo "{{RED}}Error: Tap directory not found at $TAP_DIR{{NORMAL}}"
+		exit 1
+	fi
+	mkdir -p "$TAP_DIR/Casks"
+
+	# Only copy if source and destination are different files
+	if [[ ! Casks/gh-observer.rb -ef "$TAP_DIR/Casks/gh-observer.rb" ]]; then
+		cp Casks/gh-observer.rb "$TAP_DIR/Casks/"
+		chmod 644 "$TAP_DIR/Casks/gh-observer.rb"
+		echo "{{GREEN}}Cask copied successfully{{NORMAL}}"
+	else
+		echo "{{GREEN}}Cask already in place (symlinked tap directory){{NORMAL}}"
+	fi
+
+	# Test installation
+	echo "{{GREEN}}Installing cask...{{NORMAL}}"
+	brew install --cask chicks-net/chicks/gh-observer
+
+	# Verify extension is installed
+	echo "{{GREEN}}Verifying gh observer is installed...{{NORMAL}}"
+	gh extension list | grep -q "fini-net/gh-observer"
+
+	# Test that gh observer works (may fail if not in a git repo)
+	echo "{{GREEN}}Testing gh observer command...{{NORMAL}}"
+	gh observer --help || echo "{{YELLOW}}Note: gh observer requires being in a GitHub repo to show checks{{NORMAL}}"
+
+	# Run brew audit on cask
+	echo "{{GREEN}}Running brew audit on cask...{{NORMAL}}"
+	brew audit --strict --online --cask gh-observer
+
+	# Run brew style on cask
+	echo "{{GREEN}}Running brew style on cask...{{NORMAL}}"
+	brew style Casks/*.rb
+
+	echo "{{GREEN}}All tests passed!{{NORMAL}}"
+
+# Uninstall the gh-observer cask
+[group('Cask')]
+uninstall-gh-observer:
+	brew uninstall --cask gh-observer || echo "{{YELLOW}}Cask not installed{{NORMAL}}"
