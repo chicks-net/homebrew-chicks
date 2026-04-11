@@ -342,3 +342,88 @@ test-gh-observer:
 [group('Cask')]
 uninstall-gh-observer:
 	brew uninstall --cask gh-observer || echo "{{YELLOW}}Cask not installed{{NORMAL}}"
+
+# Test the chicks-desktop formula
+[group('Formula')]
+test-chicks-desktop:
+	#!/usr/bin/env bash
+	set -euo pipefail
+	echo "{{BLUE}}Testing chicks-desktop formula...{{NORMAL}}"
+
+	# Ensure tap exists
+	if ! brew tap | grep -q "chicks-net/chicks"; then
+		echo "{{GREEN}}Tapping chicks-net/chicks...{{NORMAL}}"
+		brew tap chicks-net/chicks
+	fi
+
+	# Copy local formula to tapped repository for testing
+	echo "{{GREEN}}Copying formula to tap directory...{{NORMAL}}"
+	BREW_REPO="$(brew --repository)"
+	TAP_DIR="$BREW_REPO/Library/Taps/chicks-net/homebrew-chicks"
+	if [[ ! -d "$TAP_DIR" ]]; then
+		echo "{{RED}}Error: Tap directory not found at $TAP_DIR{{NORMAL}}"
+		exit 1
+	fi
+	mkdir -p "$TAP_DIR/Formula"
+
+	# Only copy if source and destination are different files
+	if [[ ! Formula/chicks-desktop.rb -ef "$TAP_DIR/Formula/chicks-desktop.rb" ]]; then
+		cp Formula/chicks-desktop.rb "$TAP_DIR/Formula/"
+		chmod 644 "$TAP_DIR/Formula/chicks-desktop.rb"
+		echo "{{GREEN}}Formula copied successfully{{NORMAL}}"
+	else
+		echo "{{GREEN}}Formula already in place (symlinked tap directory){{NORMAL}}"
+	fi
+
+	# Test installation
+	echo "{{GREEN}}Installing formula from source...{{NORMAL}}"
+	brew install --build-from-source chicks-net/chicks/chicks-desktop
+
+	# Verify setup script is installed
+	echo "{{GREEN}}Verifying chicks-desktop-setup is installed...{{NORMAL}}"
+	PKGSHARE="$(brew --prefix)/share/chicks-desktop"
+	test -x "$PKGSHARE/bin/chicks-desktop-setup"
+	echo "{{GREEN}}Setup script found at $PKGSHARE/bin/chicks-desktop-setup{{NORMAL}}"
+
+	# Verify Brewfile is installed
+	test -f "$PKGSHARE/Brewfile"
+	echo "{{GREEN}}Brewfile found at $PKGSHARE/Brewfile{{NORMAL}}"
+
+	# Run formula tests
+	echo "{{GREEN}}Running formula test suite...{{NORMAL}}"
+	brew test chicks-desktop
+
+	# Run brew audit
+	echo "{{GREEN}}Running brew audit...{{NORMAL}}"
+	brew audit --strict --online chicks-desktop
+
+	# Run brew style
+	echo "{{GREEN}}Running brew style...{{NORMAL}}"
+	brew style Formula/*.rb
+
+	echo "{{GREEN}}All tests passed!{{NORMAL}}"
+
+# Uninstall the chicks-desktop formula
+[group('Formula')]
+uninstall-chicks-desktop:
+	brew uninstall chicks-desktop || echo "{{YELLOW}}Formula not installed{{NORMAL}}"
+
+# Run the chicks-desktop setup script (installs casks, clones chicks-home, creates symlinks)
+setup-chicks-desktop:
+	#!/usr/bin/env bash
+	set -euo pipefail
+	PKGSHARE="$(brew --prefix)/share/chicks-desktop"
+	if [[ ! -x "$PKGSHARE/bin/chicks-desktop-setup" ]]; then
+		echo "{{RED}}Error: chicks-desktop-setup not found. Install chicks-desktop first.{{NORMAL}}"
+		exit 1
+	fi
+	exec "$PKGSHARE/bin/chicks-desktop-setup"
+
+# Validate the Brewfile syntax
+[group('Formula')]
+validate-brewfile:
+	#!/usr/bin/env bash
+	set -euo pipefail
+	echo "{{BLUE}}Validating Brewfile...{{NORMAL}}"
+	brew bundle check --file=Brewfile --verbose
+	echo "{{GREEN}}Brewfile is valid!{{NORMAL}}"

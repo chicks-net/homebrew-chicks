@@ -35,6 +35,21 @@ brew install chicks-net/chicks/<formula-name>
   - Formula file: `Formula/google-plus-posts-dumper.rb`
   - First Rust-based formula in the tap
 
+- **chicks-desktop** - Meta-package for full desktop environment setup
+  - Source: <https://github.com/chicks-net/chicks-home> (tarball used as placeholder; Brewfile and setup script generated inline)
+  - Depends on 50+ CLI formulae (agg, bat, git, gh, just, ripgrep, starship, etc.) plus `chicks-git-tools`
+  - Installs setup script and Brewfile to `pkgshare`; casks and dotfile setup are handled by the setup script
+  - Formula file: `Formula/chicks-desktop.rb`
+  - Bundle file: `Brewfile`
+
+## Casks
+
+- **gh-observer** - Terminal UI for watching GitHub Actions workflows
+  - Source: <https://github.com/fini-net/gh-observer>
+  - Depends on `gh` (formula)
+  - Cask file: `Casks/gh-observer.rb`
+  - Installed as a GitHub CLI extension via `postflight`
+
 ## Testing Formulas
 
 The complete formula test suite uses `just` command runner:
@@ -95,6 +110,32 @@ To uninstall:
 
 ```bash
 just uninstall-google-plus-posts-dumper
+```
+
+For chicks-desktop:
+
+```bash
+just test-chicks-desktop
+```
+
+**Note:** This meta-package depends on 50+ formulae and may take significant time to install.
+
+To uninstall:
+
+```bash
+just uninstall-chicks-desktop
+```
+
+To run the desktop setup script (installs casks, clones chicks-home, creates symlinks):
+
+```bash
+just setup-chicks-desktop
+```
+
+To validate the Brewfile without installing:
+
+```bash
+just validate-brewfile
 ```
 
 ## Creating New Formula Files
