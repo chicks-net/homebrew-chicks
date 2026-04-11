@@ -84,6 +84,37 @@ Installation:
 brew install chicks-net/chicks/chicks-text-tools
 ```
 
+### chicks-desktop
+
+Meta-package for full desktop environment setup. Installs 50+ CLI tools and provides a setup script for GUI applications and home directory configuration.
+
+CLI tools included: agg, aliae, ansiweather, asciinema, bat, coreutils, cue, datasette, dnscontrol, editorconfig-checker, exiftool, ffmpeg, figlet, flac, fzf, gh, git, git-lfs, glow, go, gping, graphviz, gum, handbrake, hugo, imagemagick, jq, just, lsof, lua, markdownlint-cli2, mtr, nushell, opencode, opentofu, pandoc, podman, r, rclone, ripgrep, rustup, shellcheck, sqlite, starship, terraform-docs, tmux, uv, wget, wtfutil, yt-dlp, chicks-git-tools
+
+Installation:
+
+```bash
+brew install chicks-net/chicks/chicks-desktop
+```
+
+After installing the formula, run the setup script to complete configuration:
+
+```bash
+$(brew --prefix)/share/chicks-desktop/bin/chicks-desktop-setup
+```
+
+The setup script will:
+
+- Install GUI applications (Blender, GIMP, Godot, Inkscape, iTerm2, LibreOffice, Processing)
+- Install the Claude Code app and Fira Code Nerd Font
+- Clone [chicks-home](https://github.com/chicks-net/chicks-home) into `~/Documents/git/chicks-home`
+- Create symlinks for dotfiles (`.bashrc`, `.vimrc`, etc.)
+
+You can also install GUI applications manually using the bundled Brewfile:
+
+```bash
+brew bundle --file=$(brew --prefix)/share/chicks-desktop/Brewfile
+```
+
 ## Contributing
 
 - [Code of Conduct](.github/CODE_OF_CONDUCT.md)
