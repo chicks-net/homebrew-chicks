@@ -1,8 +1,8 @@
 class ChicksMonitoringTools < Formula
   desc "System and network monitoring utilities"
   homepage "https://github.com/chicks-net/chicks-home"
-  url "https://github.com/chicks-net/chicks-home/archive/refs/tags/v42.0.tar.gz"
-  sha256 "2594b4f1b3830e6f398fef4c84e44b104a92ad69c1a000bcc341145b141168d9"
+  url "https://github.com/chicks-net/chicks-home/archive/refs/tags/v42.3.tar.gz"
+  sha256 "30feafdb860205b8e17321debd825201fd8b20155c0568df9b23431a25942e04"
   license "GPL-2.0-only"
 
   def install
