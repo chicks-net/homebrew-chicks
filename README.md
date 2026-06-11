@@ -19,6 +19,18 @@ Install the tap:
 brew tap chicks-net/chicks
 ```
 
+> **Note:** Homebrew is introducing [tap trust](https://docs.brew.sh/Tap-Trust) as a security measure.
+> Starting in Homebrew 6.0.0 (or 5.2.0, whichever comes first), non-official taps will require explicit trust.
+> To trust this tap now, run:
+>
+> ```bash
+> brew trust --tap chicks-net/chicks
+> ```
+>
+> Or set `HOMEBREW_REQUIRE_TAP_TRUST=1` to opt into the new behavior early.
+> See [Homebrew/brew#22635](https://github.com/Homebrew/brew/pull/22635) for the Brewfile trust documentation
+> and [Homebrew/brew#22652](https://github.com/Homebrew/brew/pull/22652) for ongoing trust handling improvements.
+
 ## Available Formulas
 
 Here are a couple of sets of tools that you might find interesting.
