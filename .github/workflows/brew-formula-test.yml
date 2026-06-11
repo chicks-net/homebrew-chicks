@@ -19,6 +19,9 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
+    env:
+      HOMEBREW_NO_SANDBOX_LINUX: 1
+
     permissions:
       contents: read
 
