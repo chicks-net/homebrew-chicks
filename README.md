@@ -5,6 +5,8 @@
 ![GitHub Pull Requests](https://img.shields.io/github/issues-pr/chicks-net/homebrew-chicks)
 ![GitHub License](https://img.shields.io/github/license/chicks-net/homebrew-chicks)
 ![GitHub watchers](https://img.shields.io/github/watchers/chicks-net/homebrew-chicks)
+![GitHub commits since latest release](https://img.shields.io/github/commits-since/chicks-net/homebrew-chicks/latest)
+
 
 Install some of my software with [Homebrew](https://brew.sh/).
 
