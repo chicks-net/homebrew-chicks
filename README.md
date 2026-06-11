@@ -7,7 +7,6 @@
 ![GitHub watchers](https://img.shields.io/github/watchers/chicks-net/homebrew-chicks)
 ![GitHub commits since latest release](https://img.shields.io/github/commits-since/chicks-net/homebrew-chicks/latest)
 
-
 Install some of my software with [Homebrew](https://brew.sh/).
 
 ![Superfluous AI image, thanks to Nano Banana and Galaxy.AI](docs/flamingo-brewery-tap-with-chicks.jpg)
