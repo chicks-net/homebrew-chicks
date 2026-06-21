@@ -146,14 +146,13 @@ attestation (`multiple.intoto.jsonl`).
 ### Verify the asset signature with cosign
 
 ```bash
+# Replace v0.5 with the tag you want to verify.
 TAG="v0.5"
 curl -L -O "https://github.com/chicks-net/homebrew-chicks/releases/download/${TAG}/homebrew-chicks-${TAG}.tar.gz"
-curl -L -O "https://github.com/chicks-net/homebrew-chicks/releases/download/${TAG}/homebrew-chicks-${TAG}.tar.gz.sig"
-curl -L -O "https://github.com/chicks-net/homebrew-chicks/releases/download/${TAG}/homebrew-chicks-${TAG}.tar.gz.pem"
+curl -L -O "https://github.com/chicks-net/homebrew-chicks/releases/download/${TAG}/homebrew-chicks-${TAG}.tar.gz.bundle"
 
 cosign verify-blob \
-  --certificate homebrew-chicks-${TAG}.tar.gz.pem \
-  --signature homebrew-chicks-${TAG}.tar.gz.sig \
+  --bundle homebrew-chicks-${TAG}.tar.gz.bundle \
   --certificate-identity-regexp "https://github.com/chicks-net/homebrew-chicks/.github/workflows/release.yml@refs/tags/${TAG}" \
   --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
   homebrew-chicks-${TAG}.tar.gz
