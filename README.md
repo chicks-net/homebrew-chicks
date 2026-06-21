@@ -154,8 +154,8 @@ curl -L -O "https://github.com/chicks-net/homebrew-chicks/releases/download/${TA
 cosign verify-blob \
   --certificate homebrew-chicks-${TAG}.tar.gz.pem \
   --signature homebrew-chicks-${TAG}.tar.gz.sig \
-  --certificate-identity-regexp 'https://github.com/chicks-net/homebrew-chicks/.github/workflows/release.yml@refs/tags/${TAG}' \
-  --certificate-oidc-issuer 'https://token.actions.githubusercontent.com' \
+  --certificate-identity-regexp "https://github.com/chicks-net/homebrew-chicks/.github/workflows/release.yml@refs/tags/${TAG}" \
+  --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
   homebrew-chicks-${TAG}.tar.gz
 ```
 
