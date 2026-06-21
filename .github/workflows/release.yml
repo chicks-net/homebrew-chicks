@@ -84,9 +84,9 @@ jobs:
         run: |
           set -euo pipefail
           # Keyless signing via GitHub OIDC - no long-lived secrets to rotate.
+          # The --bundle file contains the signature and certificate; verify
+          # downstream with `cosign verify-blob --bundle "${BUNDLE}.bundle"`.
           cosign sign-blob --yes "${BUNDLE}" \
-            --output-signature "${BUNDLE}.sig" \
-            --output-certificate "${BUNDLE}.pem" \
             --bundle "${BUNDLE}.bundle"
 
       - name: Upload signed assets to release
@@ -99,8 +99,6 @@ jobs:
           gh release upload "${TAG}" \
             "${BUNDLE}" \
             checksums.txt \
-            "${BUNDLE}.sig" \
-            "${BUNDLE}.pem" \
             "${BUNDLE}.bundle" \
             "${BUNDLE}.sbom.json" \
             --clobber
