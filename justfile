@@ -422,7 +422,7 @@ setup-chicks-desktop:
 # Verify a release's cosign signature and SLSA provenance (defaults to latest)
 # Usage: just verify-release [v0.5]
 [group('Release')]
-verify-release TAG="$(gh release view --json tagName -q .tagName)":
+verify-release TAG=`gh release view --json tagName -q .tagName`:
     #!/usr/bin/env bash
     set -euo pipefail
 
@@ -475,7 +475,12 @@ verify-release TAG="$(gh release view --json tagName -q .tagName)":
     echo "{{GREEN}}Verifying checksums.txt...{{NORMAL}}"
     # checksums.txt only covers the bundle; regenerate and compare.
     EXPECTED="$(grep -E " ${BUNDLE}\$" checksums.txt | awk '{print $1}')"
-    ACTUAL="$(sha256sum "${BUNDLE}" | awk '{print $1}')"
+    # sha256sum is GNU coreutils (absent on macOS); fall back to shasum -a 256
+    if command -v sha256sum >/dev/null 2>&1; then
+        ACTUAL="$(sha256sum "${BUNDLE}" | awk '{print $1}')"
+    else
+        ACTUAL="$(shasum -a 256 "${BUNDLE}" | awk '{print $1}')"
+    fi
     if [[ "$EXPECTED" != "$ACTUAL" ]]; then
         echo "{{RED}}Checksum mismatch: expected $EXPECTED, got $ACTUAL{{NORMAL}}"
         exit 1
