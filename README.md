@@ -140,7 +140,7 @@ brew bundle --file=$(brew --prefix)/share/chicks-desktop/Brewfile
 Each tagged release (e.g. `v0.5`) ships a metadata-only asset bundle
 (`homebrew-chicks-<tag>.tar.gz` containing the formula files, `Brewfile`, and
 this README), a `checksums.txt` file, a cosign keyless signature
-(`.sig` / `.pem` / `.bundle`), an SBOM (`.sbom.json`), and an SLSA provenance
+(`.bundle`), an SBOM (`.sbom.json`), and an SLSA provenance
 attestation (`multiple.intoto.jsonl`).
 
 ### Verify the asset signature with cosign
