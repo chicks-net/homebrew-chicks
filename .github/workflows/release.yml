@@ -84,9 +84,15 @@ jobs:
         run: |
           set -euo pipefail
           # Keyless signing via GitHub OIDC - no long-lived secrets to rotate.
+          # The --bundle file embeds the signature, certificate, and Rekor
+          # entry; verify downstream with the identity/issuer flags, e.g.:
+          #   cosign verify-blob \
+          #     --bundle homebrew-chicks-${TAG}.tar.gz.bundle \
+          #     --certificate-identity-regexp \
+          #       "https://github.com/chicks-net/homebrew-chicks/.github/workflows/release.yml@refs/tags/${TAG}" \
+          #     --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
+          #     homebrew-chicks-${TAG}.tar.gz
           cosign sign-blob --yes "${BUNDLE}" \
-            --output-signature "${BUNDLE}.sig" \
-            --output-certificate "${BUNDLE}.pem" \
             --bundle "${BUNDLE}.bundle"
 
       - name: Upload signed assets to release
@@ -99,8 +105,6 @@ jobs:
           gh release upload "${TAG}" \
             "${BUNDLE}" \
             checksums.txt \
-            "${BUNDLE}.sig" \
-            "${BUNDLE}.pem" \
             "${BUNDLE}.bundle" \
             "${BUNDLE}.sbom.json" \
             --clobber
