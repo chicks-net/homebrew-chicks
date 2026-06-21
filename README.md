@@ -177,6 +177,26 @@ identities, so there are no long-lived signing keys to trust or rotate - you
 only trust the Sigstore Fulcio certificate chain and the workflow identity
 printed above.
 
+### Verify a release with `just verify-release`
+
+For convenience, the repo's `justfile` ships a `verify-release` recipe that
+performs all three checks (cosign signature, SLSA provenance, and
+`checksums.txt`) in one shot. It defaults to the latest published tag and
+cleans up its temp directory afterwards:
+
+```bash
+# Verify the latest release
+just verify-release
+
+# Verify a specific tag
+just verify-release v0.6
+```
+
+The recipe requires `cosign`, `slsa-verifier`, and `curl`; it will tell you to
+install any that are missing (`brew install cosign slsa-verifier`).
+If a tag has no signed assets attached, it will point you at
+`gh release view <TAG> --json assets -q '.assets[].name'` to inspect the release.
+
 ## Support & Security
 
 - [Getting Support](.github/SUPPORT.md)
