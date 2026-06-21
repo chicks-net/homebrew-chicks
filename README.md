@@ -192,8 +192,10 @@ just verify-release
 just verify-release v0.6
 ```
 
-The recipe requires `cosign`, `slsa-verifier`, and `curl`; it will tell you to
-install any that are missing (`brew install cosign slsa-verifier`).
+The recipe requires `cosign`, `slsa-verifier`, `curl`, and `gh`; it will tell
+you to install any that are missing (`brew install cosign slsa-verifier gh`).
+`gh` is used to look up the latest tag when none is given and to inspect a
+release's assets in the troubleshooting hint.
 If a tag has no signed assets attached, it will point you at
 `gh release view <TAG> --json assets -q '.assets[].name'` to inspect the release.
 

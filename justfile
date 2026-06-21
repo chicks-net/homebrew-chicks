@@ -434,7 +434,7 @@ verify-release TAG=`gh release view --json tagName -q .tagName`:
     echo "{{BLUE}}Verifying release ${TAG} for ${REPO}...{{NORMAL}}"
 
     # Check required tools
-    for tool in cosign slsa-verifier curl; do
+    for tool in cosign slsa-verifier curl gh; do
         if ! command -v "$tool" >/dev/null 2>&1; then
             echo "{{RED}}Error: '$tool' not found. Install with: brew install $tool{{NORMAL}}"
             exit 1
