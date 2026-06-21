@@ -135,6 +135,48 @@ brew bundle --file=$(brew --prefix)/share/chicks-desktop/Brewfile
 - [Contributing Guide](.github/CONTRIBUTING.md) includes a step-by-step guide to our
   [development process](.github/CONTRIBUTING.md#development-process).
 
+## Verifying releases
+
+Each tagged release (e.g. `v0.5`) ships a metadata-only asset bundle
+(`homebrew-chicks-<tag>.tar.gz` containing the formula files, `Brewfile`, and
+this README), a `checksums.txt` file, a cosign keyless signature
+(`.sig` / `.pem` / `.bundle`), an SBOM (`.sbom.json`), and an SLSA provenance
+attestation (`multiple.intoto.jsonl`).
+
+### Verify the asset signature with cosign
+
+```bash
+# Replace v0.5 with the tag you want to verify.
+TAG="v0.5"
+curl -L -O "https://github.com/chicks-net/homebrew-chicks/releases/download/${TAG}/homebrew-chicks-${TAG}.tar.gz"
+curl -L -O "https://github.com/chicks-net/homebrew-chicks/releases/download/${TAG}/homebrew-chicks-${TAG}.tar.gz.bundle"
+
+cosign verify-blob \
+  --bundle homebrew-chicks-${TAG}.tar.gz.bundle \
+  --certificate-identity-regexp "https://github.com/chicks-net/homebrew-chicks/.github/workflows/release.yml@refs/tags/${TAG}" \
+  --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
+  homebrew-chicks-${TAG}.tar.gz
+```
+
+### Verify SLSA build provenance
+
+```bash
+TAG="v0.5"
+curl -L -O "https://github.com/chicks-net/homebrew-chicks/releases/download/${TAG}/homebrew-chicks-${TAG}.tar.gz"
+curl -L -O "https://github.com/chicks-net/homebrew-chicks/releases/download/${TAG}/multiple.intoto.jsonl"
+
+slsa-verifier verify-artifact \
+  --provenance-path multiple.intoto.jsonl \
+  --source-uri github.com/chicks-net/homebrew-chicks \
+  --source-tag "${TAG}" \
+  homebrew-chicks-${TAG}.tar.gz
+```
+
+The signature is produced via keyless signing using GitHub Actions OIDC
+identities, so there are no long-lived signing keys to trust or rotate - you
+only trust the Sigstore Fulcio certificate chain and the workflow identity
+printed above.
+
 ## Support & Security
 
 - [Getting Support](.github/SUPPORT.md)
