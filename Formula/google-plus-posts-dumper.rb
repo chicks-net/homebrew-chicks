@@ -1,8 +1,8 @@
 class GooglePlusPostsDumper < Formula
   desc "Convert Google+ Takeout archives to Markdown files"
   homepage "https://github.com/chicks-net/google-plus-posts-dumper"
-  url "https://github.com/chicks-net/google-plus-posts-dumper/archive/refs/tags/v1.0.tar.gz"
-  sha256 "97b5fbf4b9a4a6e803e8ae9735efdef45245bebba85f8f7086a4af6f4766b42b"
+  url "https://github.com/chicks-net/google-plus-posts-dumper/archive/refs/tags/v1.1.tar.gz"
+  sha256 "d96cb7f117f849c4013f5fd80cfbd1676c66a1e43d6d507194ee15634e3b79f5"
   license "GPL-2.0-only"
 
   depends_on "rust" => :build
