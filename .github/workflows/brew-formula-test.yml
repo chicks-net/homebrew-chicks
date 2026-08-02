@@ -30,7 +30,7 @@ jobs:
 
       # Setup Homebrew (installs on Linux, updates on macOS)
       - name: Setup Homebrew
-        uses: Homebrew/actions/setup-homebrew@2ebcf16054461267868620b1414507f3ccc765c1 # master
+        uses: Homebrew/actions/setup-homebrew@5037c6f1012cc5ea0b9f03fedbaf9955ed9e51e0 # master
 
       # Install just command runner
       - name: Install just
