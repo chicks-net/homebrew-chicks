@@ -10,7 +10,7 @@ on:
 permissions: {}
 
 jobs:
-  test:
+  brew-formula-test:
     strategy:
       fail-fast: false
       matrix:
