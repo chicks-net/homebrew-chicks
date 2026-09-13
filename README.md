@@ -98,6 +98,29 @@ Installation:
 brew install chicks-net/chicks/chicks-text-tools
 ```
 
+### ctm
+
+Control Time Machines Corp. network clocks over UDP:
+
+- **ctm** - query clock status and drive uptimer/downtimer/display modes
+
+Installation:
+
+```bash
+brew install chicks-net/chicks/ctm
+```
+
+Installs a prebuilt binary from the
+[ctm](https://github.com/chicks-net/ctm) GitHub release on macOS/Linux
+(amd64/arm64); falls back to building from source with `go` on other
+platforms.
+
+Usage:
+
+```bash
+ctm status 192.168.1.100
+```
+
 ### chicks-desktop
 
 Meta-package for full desktop environment setup. Installs 50+ CLI tools and provides a setup script for GUI applications and home directory configuration.
