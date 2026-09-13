@@ -284,6 +284,67 @@ test-google-plus-posts-dumper:
 uninstall-google-plus-posts-dumper:
 	brew uninstall google-plus-posts-dumper || echo "{{YELLOW}}Formula not installed{{NORMAL}}"
 
+# Test the ctm formula
+[group('Formula')]
+test-ctm:
+	#!/usr/bin/env bash
+	set -euo pipefail
+	echo "{{BLUE}}Testing ctm formula...{{NORMAL}}"
+
+	# Ensure tap exists
+	if ! brew tap | grep -q "chicks-net/chicks"; then
+		echo "{{GREEN}}Tapping chicks-net/chicks...{{NORMAL}}"
+		brew tap chicks-net/chicks
+	fi
+
+	# Copy local formula to tapped repository
+	echo "{{GREEN}}Copying formula to tap directory...{{NORMAL}}"
+	BREW_REPO="$(brew --repository)"
+	TAP_DIR="$BREW_REPO/Library/Taps/chicks-net/homebrew-chicks"
+	if [[ ! -d "$TAP_DIR" ]]; then
+		echo "{{RED}}Error: Tap directory not found at $TAP_DIR{{NORMAL}}"
+		exit 1
+	fi
+	mkdir -p "$TAP_DIR/Formula"
+
+	# Only copy if source and destination are different
+	if [[ ! Formula/ctm.rb -ef "$TAP_DIR/Formula/ctm.rb" ]]; then
+		cp Formula/ctm.rb "$TAP_DIR/Formula/"
+		chmod 644 "$TAP_DIR/Formula/ctm.rb"
+		echo "{{GREEN}}Formula copied successfully{{NORMAL}}"
+	else
+		echo "{{GREEN}}Formula already in place (symlinked tap directory){{NORMAL}}"
+	fi
+
+	# Install formula (installs the prebuilt release binary on supported
+	# platforms; pass --build-from-source manually to exercise the go-build
+	# fallback path instead)
+	echo "{{GREEN}}Installing formula...{{NORMAL}}"
+	brew install chicks-net/chicks/ctm
+
+	# Verify tool is installed
+	echo "{{GREEN}}Verifying ctm is installed...{{NORMAL}}"
+	which ctm
+
+	# Run formula tests
+	echo "{{GREEN}}Running formula test suite...{{NORMAL}}"
+	brew test ctm
+
+	# Run brew audit
+	echo "{{GREEN}}Running brew audit...{{NORMAL}}"
+	brew audit --strict --online ctm
+
+	# Run brew style
+	echo "{{GREEN}}Running brew style...{{NORMAL}}"
+	brew style Formula/*.rb
+
+	echo "{{GREEN}}All tests passed!{{NORMAL}}"
+
+# Uninstall the ctm formula
+[group('Formula')]
+uninstall-ctm:
+	brew uninstall ctm || echo "{{YELLOW}}Formula not installed{{NORMAL}}"
+
 # Test the gh-observer cask
 [group('Cask')]
 test-gh-observer:
