@@ -35,6 +35,13 @@ brew install chicks-net/chicks/<formula-name>
   - Formula file: `Formula/google-plus-posts-dumper.rb`
   - First Rust-based formula in the tap
 
+- **ctm** - Control Time Machines Corp. network clocks over UDP
+  - Source: <https://github.com/chicks-net/ctm>
+  - Installs prebuilt binaries from the GitHub release for macOS/Linux
+    (amd64/arm64); falls back to `go build` (`go` build-time dep) otherwise
+  - Formula file: `Formula/ctm.rb`
+  - First formula in the tap to install prebuilt release binaries
+
 - **chicks-desktop** - Meta-package for full desktop environment setup
   - Source: <https://github.com/chicks-net/chicks-home> (tarball used as placeholder; Brewfile and setup script generated inline)
   - Depends on 50+ CLI formulae (agg, bat, git, gh, just, ripgrep, starship, etc.) plus `chicks-git-tools`
