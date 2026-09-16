@@ -145,6 +145,23 @@ To validate the Brewfile without installing:
 just validate-brewfile
 ```
 
+## Auditing Everything
+
+To audit all formulae and casks in the tap with one command:
+
+```bash
+just audit-all
+```
+
+This scopes each package type correctly (`--formula` for `Formula/*.rb`,
+`--cask` for `Casks/*.rb`) and ends with `brew style` over both directories.
+
+**Note:** Bare `brew audit --strict --online` (no arguments) is not a
+supported way to audit this tap. It audits every tap installed on the machine
+and mis-loads casks as formulae, producing bogus errors like
+`undefined method 'license' for Cask 'gh-observer'`. Use the scoped
+`just test-*` recipes or `just audit-all` instead.
+
 ## Creating New Formula Files
 
 When adding new Formula files to this tap:

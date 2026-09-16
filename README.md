@@ -152,6 +152,23 @@ You can also install GUI applications manually using the bundled Brewfile:
 brew bundle --file=$(brew --prefix)/share/chicks-desktop/Brewfile
 ```
 
+## Auditing
+
+To audit every formula and cask in this tap:
+
+```bash
+just audit-all
+```
+
+The recipe scopes each package type correctly (`--formula` for `Formula/*.rb`,
+`--cask` for `Casks/*.rb`) and finishes with `brew style`.
+
+> **Note:** A bare `brew audit --strict --online` (no arguments) is not a
+> supported way to audit this tap. It audits every tap installed on your
+> machine and mis-loads casks as formulae, producing bogus errors like
+> `undefined method 'license' for Cask 'gh-observer'`. Use the scoped
+> `just test-*` recipes or `just audit-all` instead.
+
 ## Contributing
 
 - [Code of Conduct](.github/CODE_OF_CONDUCT.md)

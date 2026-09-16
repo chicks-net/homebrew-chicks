@@ -1,60 +1,43 @@
 cask "gh-observer" do
-  version "0.8"
-  sha256 "8c3edbd7630a4278a69ef532aba9021fc7f4578ff9ceb650641e53683b0bfe01"
+  arch arm: "arm64", intel: "amd64"
+  os macos: "darwin", linux: "linux"
 
-  url "https://github.com/fini-net/gh-observer/archive/refs/tags/v#{version}.tar.gz"
+  version "4.0"
+  sha256 arm:          "2c646bd85604dafbb72205fd3ab029c3d45679074dc67f6a807a435b63713338",
+         intel:        "f5e1fdbf27dba16f31a9cb0d7f815c7acd327fab55f16d24990c6d4d9ca9a175",
+         arm64_linux:  "beb31e5594078cbc977e86ae0730f587527ac32e7bff5ea0351990d70d8b6968",
+         x86_64_linux: "36324d0878a31b315d9bbe9b34da1b80c32303cba628c11836bce907385cb42f"
+
+  on_macos do
+    binary "darwin-#{arch}", target: "gh-observer"
+  end
+  on_linux do
+    binary "linux-#{arch}", target: "gh-observer"
+  end
+
+  url "https://github.com/fini-net/gh-observer/releases/download/v#{version}/#{os}-#{arch}"
   name "GitHub Observer"
   desc "Terminal UI for watching GitHub Actions CI/CD workflows with runtime metrics"
   homepage "https://github.com/fini-net/gh-observer"
-  license "GPL-2.0"
+
+  livecheck do
+    url :url
+    strategy :github_latest
+  end
 
   depends_on formula: "gh"
 
-  # NOTE: This cask uses `stage_only true` because the actual extension binary
-  # is installed via `gh extension install` at postflight time. The downloaded
-  # tarball is verified by sha256 but its contents are not directly used.
-  # Upgrades via `brew upgrade` will pull the latest version from GitHub,
-  # which may differ from the version specified in this cask.
-  stage_only true
-
-  postflight do
-    list_output = system_command "#{HOMEBREW_PREFIX}/bin/gh",
-                                 args:         ["extension", "list"],
-                                 must_succeed: false
-    if list_output.stdout.include?("fini-net/gh-observer")
-      system_command "#{HOMEBREW_PREFIX}/bin/gh",
-                     args:         ["extension", "upgrade", "fini-net/gh-observer"],
-                     must_succeed: true
-    else
-      system_command "#{HOMEBREW_PREFIX}/bin/gh",
-                     args:         ["extension", "install", "fini-net/gh-observer"],
-                     must_succeed: true
-    end
-  end
-
-  uninstall_postflight do
-    system_command "#{HOMEBREW_PREFIX}/bin/gh",
-                   args:         ["extension", "remove", "fini-net/gh-observer"],
-                   must_succeed: false
-  end
-
-  test do
-    output = shell_output("#{HOMEBREW_PREFIX}/bin/gh extension list 2>&1")
-    assert_match "fini-net/gh-observer", output
-  end
-
   caveats <<~EOS
-    gh-observer has been installed as a GitHub CLI extension.
+    gh-observer has been installed as a standalone binary: #{HOMEBREW_PREFIX}/bin/gh-observer
 
     Run it with:
-      gh observer
+      gh-observer [PR_NUMBER | PR_URL | ACTIONS_RUN_URL]
+      gh-observer --repo [owner/repo | URL]
 
-    To upgrade:
-      gh extension upgrade fini-net/gh-observer
-    Or:
-      brew upgrade gh-observer
+    It authenticates with the token from your `gh auth login` (or GITHUB_TOKEN).
 
-    To uninstall:
-      brew uninstall gh-observer
+    Prefer the `gh observer` extension form instead? Install with:
+      gh extension install fini-net/gh-observer
+    (remove this cask first to avoid having two copies).
   EOS
 end

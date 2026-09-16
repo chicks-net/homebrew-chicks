@@ -404,6 +404,41 @@ test-gh-observer:
 uninstall-gh-observer:
 	brew uninstall --cask gh-observer || echo "{{YELLOW}}Cask not installed{{NORMAL}}"
 
+# Audit all formulae and casks in this tap (scopes each type correctly).
+# Bare `brew audit` with no arguments is NOT supported for this tap: it audits
+# every installed tap/package and mis-loads casks as formulae, producing
+# bogus "undefined method 'license'" errors (issue #77).
+[group('Audit')]
+audit-all:
+	#!/usr/bin/env bash
+	set -euo pipefail
+	shopt -s nullglob
+
+	# brew audit requires names (not paths); strip dir and .rb extension
+	FORMULAE=()
+	for f in Formula/*.rb; do
+		FORMULAE+=("$(basename "$f" .rb)")
+	done
+	if [[ ${#FORMULAE[@]} -gt 0 ]]; then
+		echo "{{BLUE}}Auditing ${#FORMULAE[@]} formula(e)...{{NORMAL}}"
+		brew audit --strict --online --formula "${FORMULAE[@]}"
+	fi
+
+	# brew audit requires names (not paths); strip dir and .rb extension
+	CASKS=()
+	for f in Casks/*.rb; do
+		CASKS+=("$(basename "$f" .rb)")
+	done
+	if [[ ${#CASKS[@]} -gt 0 ]]; then
+		echo "{{BLUE}}Auditing ${#CASKS[@]} cask(s)...{{NORMAL}}"
+		brew audit --strict --online --cask "${CASKS[@]}"
+	fi
+
+	echo "{{BLUE}}Running style checks...{{NORMAL}}"
+	brew style Formula/*.rb Casks/*.rb
+
+	echo "{{GREEN}}All audits passed!{{NORMAL}}"
+
 # Test the chicks-desktop formula
 [group('Formula')]
 test-chicks-desktop:
