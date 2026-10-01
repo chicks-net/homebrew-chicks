@@ -18,9 +18,10 @@
       "overridePackageName": "https://github.com/bridgecrewio/checkov-action"
     },
     {
-      "matchDepNames": ["Homebrew/actions/*"],
+      "matchDepNames": ["Homebrew/actions"],
       "versioning": "loose",
-      "description": "Homebrew/actions uses calver tags (e.g. 2026.08.03.1) that default semver versioning cannot parse, which breaks digest lookups"
+      "extractVersion": "^(?<version>\\d+\\.\\d+\\.\\d+)",
+      "description": "Homebrew/actions uses 4-component calver tags (e.g. 2026.08.03.1), but Renovate's pin-comment parser only reads 3 components, so a SHA-pinned ref gets currentValue '2026.08.03'. loose versioning makes that value valid, and extractVersion truncates release tags to the same 3-component form so digest lookups resolve against a real release instead of failing."
     },
     {
       "matchDepNames": ["slsa-framework/slsa-github-generator"],
