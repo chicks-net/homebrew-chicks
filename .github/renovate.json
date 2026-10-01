@@ -18,6 +18,11 @@
       "overridePackageName": "https://github.com/bridgecrewio/checkov-action"
     },
     {
+      "matchDepNames": ["Homebrew/actions"],
+      "versioning": "loose",
+      "description": "Homebrew/actions uses calver tags (e.g. 2026.08.03.1) that default semver versioning cannot parse, which breaks digest lookups"
+    },
+    {
       "matchDepNames": ["slsa-framework/slsa-github-generator"],
       "enabled": false,
       "description": "SLSA generator reusable workflow must be pinned by tag (e.g. @v2.1.0), not SHA. SHA-pinning causes 'Invalid ref' errors in the generator's internal builder checkout. See .github/workflows/release.yml."
