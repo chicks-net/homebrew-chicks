@@ -18,7 +18,7 @@
       "overridePackageName": "https://github.com/bridgecrewio/checkov-action"
     },
     {
-      "matchDepNames": ["Homebrew/actions"],
+      "matchDepNames": ["Homebrew/actions/*"],
       "versioning": "loose",
       "description": "Homebrew/actions uses calver tags (e.g. 2026.08.03.1) that default semver versioning cannot parse, which breaks digest lookups"
     },
