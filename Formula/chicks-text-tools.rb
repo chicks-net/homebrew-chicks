@@ -1,8 +1,8 @@
 class ChicksTextTools < Formula
   desc "Text manipulation utilities: comify, ruler, roll, closefh"
   homepage "https://github.com/chicks-net/chicks-home"
-  url "https://github.com/chicks-net/chicks-home/archive/refs/tags/v42.5.tar.gz"
-  sha256 "fb7d28372e1ae93b7c071f846d272be3d8cc810fc892eccf90b5f15ac3c025be"
+  url "https://github.com/chicks-net/chicks-home/archive/refs/tags/v42.7.tar.gz"
+  sha256 "bcbfb190dc41b1ae3fe079353b7fd9c970695c542927652fba6bdd9f4e300f13"
   license "GPL-2.0-only"
 
   depends_on "lsof"
