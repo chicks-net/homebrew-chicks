@@ -1,8 +1,8 @@
 class Ctm < Formula
   desc "Control Time Machines Corp. network clocks over UDP"
   homepage "https://github.com/chicks-net/ctm"
-  url "https://github.com/chicks-net/ctm/archive/refs/tags/v0.3.0.tar.gz"
-  sha256 "4f44983d622390368196e34fa8d14da2e70aa8f0f7d1b9d62cffb7f03ba6fa35"
+  url "https://github.com/chicks-net/ctm/archive/refs/tags/v0.3.1.tar.gz"
+  sha256 "3a7b09a7cfa254cdae0211d53f988aa3e30a0616e30f21d6a53b9a2e246dc116"
   license "GPL-2.0-only"
 
   needs_source_build = true
