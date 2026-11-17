@@ -59,36 +59,76 @@ class ChicksDesktop < Formula
 
   def install
     (pkgshare/"bin").mkpath
-    (pkgshare/"bin/chicks-desktop-setup").write generate_setup_script
+    (pkgshare/"bin/chicks-desktop-setup").write <<~SCRIPT
+      #!/usr/bin/env bash
+      set -euo pipefail
+
+      BREWFILE="#{pkgshare}/Brewfile"
+      CHICKS_HOME_DIR="$HOME/Documents/git/chicks-home"
+      CHICKS_HOME_URL="https://github.com/chicks-net/chicks-home"
+
+      echo "=== chicks-desktop setup ==="
+      echo
+
+      # Install casks and additional formulae from Brewfile
+      if [[ -f "$BREWFILE" ]]; then
+        echo "--- Installing packages from Brewfile ---"
+        brew bundle --file="$BREWFILE" --no-lock
+      else
+        echo "WARNING: Brewfile not found at $BREWFILE"
+        echo "Install casks manually or re-install chicks-desktop."
+      fi
+
+      echo
+      echo "--- Setting up chicks-home ---"
+
+      # Create ~/Documents/git directory
+      mkdir -p "$HOME/Documents/git"
+
+      # Clone or update chicks-home
+      if [[ -d "$CHICKS_HOME_DIR/.git" ]]; then
+        echo "Updating existing chicks-home repository..."
+        git -C "$CHICKS_HOME_DIR" pull
+      else
+        echo "Cloning chicks-home repository..."
+        git clone "$CHICKS_HOME_URL" "$CHICKS_HOME_DIR"
+      fi
+
+      echo
+      echo "--- Creating symlinks ---"
+
+      DOTFILES=(
+        ".aliae.yaml"
+        ".bcrc"
+        ".bashrc"
+        ".gitignore"
+        ".gitignore_global"
+        ".perltidyrc"
+        ".pylintrc"
+        ".vimrc"
+      )
+
+      for dotfile in "${DOTFILES[@]}"; do
+        source="$CHICKS_HOME_DIR/$dotfile"
+        target="$HOME/$dotfile"
+
+        if [[ -L "$target" ]]; then
+          echo "SKIP: $target already a symlink"
+        elif [[ -e "$target" ]]; then
+          echo "SKIP: $target already exists (not a symlink)"
+        elif [[ -f "$source" ]]; then
+          ln -s "$source" "$target"
+          echo "LINK: $target -> $source"
+        else
+          echo "SKIP: $source not found in chicks-home"
+        fi
+      done
+
+      echo
+      echo "=== chicks-desktop setup complete ==="
+    SCRIPT
     chmod 0755, pkgshare/"bin/chicks-desktop-setup"
-    (pkgshare/"Brewfile").write generate_brewfile
-  end
-
-  def caveats
-    <<~EOS
-      chicks-desktop has installed CLI tools via formula dependencies.
-
-      To complete your desktop setup, run:
-        #{pkgshare}/bin/chicks-desktop-setup
-
-      This will:
-        - Install GUI applications via Homebrew casks (Blender, GIMP, Godot, etc.)
-        - Install the Fira Code Nerd Font
-        - Clone chicks-net/chicks-home into ~/Documents/git/chicks-home
-        - Create symlinks for dotfiles (~/.bashrc, ~/.vimrc, etc.)
-
-      Alternatively, install casks manually:
-        brew bundle --file=#{pkgshare}/Brewfile
-    EOS
-  end
-
-  test do
-    assert_predicate pkgshare/"bin/chicks-desktop-setup", :executable?
-    assert_path_exists pkgshare/"Brewfile"
-  end
-
-  def generate_brewfile
-    <<~RUBY
+    (pkgshare/"Brewfile").write <<~RUBY
       tap "homebrew/cask-fonts"
       tap "chicks-net/chicks"
 
@@ -158,74 +198,26 @@ class ChicksDesktop < Formula
     RUBY
   end
 
-  def generate_setup_script
-    <<~SCRIPT
-      #!/usr/bin/env bash
-      set -euo pipefail
+  def caveats
+    <<~EOS
+      chicks-desktop has installed CLI tools via formula dependencies.
 
-      BREWFILE="#{pkgshare}/Brewfile"
-      CHICKS_HOME_DIR="$HOME/Documents/git/chicks-home"
-      CHICKS_HOME_URL="https://github.com/chicks-net/chicks-home"
+      To complete your desktop setup, run:
+        #{pkgshare}/bin/chicks-desktop-setup
 
-      echo "=== chicks-desktop setup ==="
-      echo
+      This will:
+        - Install GUI applications via Homebrew casks (Blender, GIMP, Godot, etc.)
+        - Install the Fira Code Nerd Font
+        - Clone chicks-net/chicks-home into ~/Documents/git/chicks-home
+        - Create symlinks for dotfiles (~/.bashrc, ~/.vimrc, etc.)
 
-      # Install casks and additional formulae from Brewfile
-      if [[ -f "$BREWFILE" ]]; then
-        echo "--- Installing packages from Brewfile ---"
-        brew bundle --file="$BREWFILE" --no-lock
-      else
-        echo "WARNING: Brewfile not found at $BREWFILE"
-        echo "Install casks manually or re-install chicks-desktop."
-      fi
+      Alternatively, install casks manually:
+        brew bundle --file=#{pkgshare}/Brewfile
+    EOS
+  end
 
-      echo
-      echo "--- Setting up chicks-home ---"
-
-      # Create ~/Documents/git directory
-      mkdir -p "$HOME/Documents/git"
-
-      # Clone or update chicks-home
-      if [[ -d "$CHICKS_HOME_DIR/.git" ]]; then
-        echo "Updating existing chicks-home repository..."
-        git -C "$CHICKS_HOME_DIR" pull
-      else
-        echo "Cloning chicks-home repository..."
-        git clone "$CHICKS_HOME_URL" "$CHICKS_HOME_DIR"
-      fi
-
-      echo
-      echo "--- Creating symlinks ---"
-
-      DOTFILES=(
-        ".aliae.yaml"
-        ".bcrc"
-        ".bashrc"
-        ".gitignore"
-        ".gitignore_global"
-        ".perltidyrc"
-        ".pylintrc"
-        ".vimrc"
-      )
-
-      for dotfile in "${DOTFILES[@]}"; do
-        source="$CHICKS_HOME_DIR/$dotfile"
-        target="$HOME/$dotfile"
-
-        if [[ -L "$target" ]]; then
-          echo "SKIP: $target already a symlink"
-        elif [[ -e "$target" ]]; then
-          echo "SKIP: $target already exists (not a symlink)"
-        elif [[ -f "$source" ]]; then
-          ln -s "$source" "$target"
-          echo "LINK: $target -> $source"
-        else
-          echo "SKIP: $source not found in chicks-home"
-        fi
-      done
-
-      echo
-      echo "=== chicks-desktop setup complete ==="
-    SCRIPT
+  test do
+    assert_predicate pkgshare/"bin/chicks-desktop-setup", :executable?
+    assert_path_exists pkgshare/"Brewfile"
   end
 end
