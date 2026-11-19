@@ -1,8 +1,8 @@
 class ChicksGitTools < Formula
   desc "Git/GitHub automation: repos-summary, github_fix_https, apply-ruleset"
   homepage "https://github.com/chicks-net/chicks-home"
-  url "https://github.com/chicks-net/chicks-home/archive/refs/tags/v42.7.tar.gz"
-  sha256 "bcbfb190dc41b1ae3fe079353b7fd9c970695c542927652fba6bdd9f4e300f13"
+  url "https://github.com/chicks-net/chicks-home/archive/refs/tags/v42.8.tar.gz"
+  sha256 "094e1a6670b03169328589f3012373e527e5d759230f13648eab7a80e447b195"
   license "GPL-2.0-only"
 
   depends_on "gh"
