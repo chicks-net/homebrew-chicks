@@ -480,7 +480,7 @@ setup-chicks-desktop:
 	fi
 	exec "$PKGSHARE/bin/chicks-desktop-setup"
 
-# Verify a release's cosign signature and SLSA provenance (defaults to latest)
+# Verify a release's cosign signature, SLSA provenance, and GitHub attestations (defaults to latest)
 # Usage: just verify-release [v0.5]
 [group('Release')]
 verify-release TAG=`gh release view --json tagName -q .tagName`:
@@ -532,6 +532,11 @@ verify-release TAG=`gh release view --json tagName -q .tagName`:
         --source-uri "github.com/${REPO}" \
         --source-tag "${TAG}" \
         "${BUNDLE}"
+
+    echo "{{GREEN}}Verifying GitHub-native attestation...{{NORMAL}}"
+    # gh attestation verify prints nothing when not attached to a TTY but
+    # still exits 0 on success - GH_FORCE_TTY keeps the output visible.
+    GH_FORCE_TTY=1 gh attestation verify "${BUNDLE}" --repo "${REPO}"
 
     echo "{{GREEN}}Verifying checksums.txt...{{NORMAL}}"
     # checksums.txt only covers the bundle; regenerate and compare.

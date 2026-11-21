@@ -164,7 +164,9 @@ Each tagged release (e.g. `v0.5`) ships a metadata-only asset bundle
 (`homebrew-chicks-<tag>.tar.gz` containing the formula files, `Brewfile`, and
 this README), a `checksums.txt` file, a cosign keyless signature
 (`.bundle`), an SBOM (`.sbom.json`), and an SLSA provenance
-attestation (`multiple.intoto.jsonl`).
+attestation (`multiple.intoto.jsonl`). The release workflow also registers
+GitHub-native artifact attestations, so `gh attestation verify` works on the
+signed assets.
 
 ### Verify the asset signature with cosign
 
@@ -195,6 +197,15 @@ slsa-verifier verify-artifact \
   homebrew-chicks-${TAG}.tar.gz
 ```
 
+### Verify the GitHub-native attestation
+
+```bash
+TAG="v0.5"
+curl -L -O "https://github.com/chicks-net/homebrew-chicks/releases/download/${TAG}/homebrew-chicks-${TAG}.tar.gz"
+
+gh attestation verify homebrew-chicks-${TAG}.tar.gz --repo chicks-net/homebrew-chicks
+```
+
 The signature is produced via keyless signing using GitHub Actions OIDC
 identities, so there are no long-lived signing keys to trust or rotate - you
 only trust the Sigstore Fulcio certificate chain and the workflow identity
@@ -203,9 +214,9 @@ printed above.
 ### Verify a release with `just verify-release`
 
 For convenience, the repo's `justfile` ships a `verify-release` recipe that
-performs all three checks (cosign signature, SLSA provenance, and
-`checksums.txt`) in one shot. It defaults to the latest published tag and
-cleans up its temp directory afterwards:
+performs all four checks (cosign signature, SLSA provenance, GitHub
+attestation, and `checksums.txt`) in one shot. It defaults to the latest
+published tag and cleans up its temp directory afterwards:
 
 ```bash
 # Verify the latest release
