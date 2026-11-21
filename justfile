@@ -536,7 +536,12 @@ verify-release TAG=`gh release view --json tagName -q .tagName`:
     echo "{{GREEN}}Verifying GitHub-native attestation...{{NORMAL}}"
     # gh attestation verify prints nothing when not attached to a TTY but
     # still exits 0 on success - GH_FORCE_TTY keeps the output visible.
-    GH_FORCE_TTY=1 gh attestation verify "${BUNDLE}" --repo "${REPO}"
+    # --signer-workflow pins the trust boundary to this release workflow,
+    # matching the exact-identity cosign check above; without it, any
+    # workflow in the repo could have produced the attestation.
+    GH_FORCE_TTY=1 gh attestation verify "${BUNDLE}" \
+        --repo "${REPO}" \
+        --signer-workflow "${REPO}/.github/workflows/release.yml"
 
     echo "{{GREEN}}Verifying checksums.txt...{{NORMAL}}"
     # checksums.txt only covers the bundle; regenerate and compare.
