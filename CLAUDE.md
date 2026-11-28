@@ -145,6 +145,19 @@ To validate the Brewfile without installing:
 just validate-brewfile
 ```
 
+### Ruby Coverage Harness
+
+`spec/` holds an RSpec suite that loads every formula and cask against a
+recording stub of the Homebrew DSL, executing every Ruby line - including
+all four os/cpu platform branches via the stub's arch cycling. CI runs it
+in `.github/workflows/ruby-tests.yml` and uploads SimpleCov's lcov report
+to Codecov with tokenless OIDC auth. It is execution coverage only;
+`brew test` remains the source of truth for real behavior. Local run:
+
+```bash
+brew install ruby && bundle install && bundle exec rspec
+```
+
 ## Creating New Formula Files
 
 When adding new Formula files to this tap:

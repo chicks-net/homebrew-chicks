@@ -16,6 +16,9 @@ hugo.darwin
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
+# Ruby coverage harness (spec/ + .github/workflows/ruby-tests.yml)
+/coverage
+
 # Dependency directories (remove the comment below to include it)
 # vendor/
 

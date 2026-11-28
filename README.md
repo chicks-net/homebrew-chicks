@@ -1,6 +1,7 @@
 # homebrew-chicks
 
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/chicks-net/homebrew-chicks/badge)](https://scorecard.dev/viewer/?uri=github.com/chicks-net/homebrew-chicks)
+[![codecov](https://codecov.io/gh/chicks-net/homebrew-chicks/graph/badge.svg)](https://codecov.io/gh/chicks-net/homebrew-chicks)
 ![GitHub Issues](https://img.shields.io/github/issues/chicks-net/homebrew-chicks)
 ![GitHub Pull Requests](https://img.shields.io/github/issues-pr/chicks-net/homebrew-chicks)
 ![GitHub License](https://img.shields.io/github/license/chicks-net/homebrew-chicks)
