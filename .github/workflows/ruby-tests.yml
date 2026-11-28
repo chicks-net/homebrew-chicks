@@ -1,0 +1,75 @@
+name: Ruby Tests
+
+on:
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "Formula/**"
+      - "Casks/**"
+      - "spec/**"
+      - "Gemfile"
+      - "Gemfile.lock"
+      - "codecov.yml"
+      - ".github/workflows/ruby-tests.yml"
+  push:
+    branches: ["main"]
+    paths:
+      - "Formula/**"
+      - "Casks/**"
+      - "spec/**"
+      - "Gemfile"
+      - "Gemfile.lock"
+      - "codecov.yml"
+      - ".github/workflows/ruby-tests.yml"
+
+# global permissions
+permissions: {}
+
+jobs:
+  rspec:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # mint the per-run OIDC token for the codecov upload below
+      id-token: write
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@aebdcf6156ab6691adf63218240e476564a1ed4c # v2.23.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@145243922b4465b78e04dd66294782c7de45901f # v1.345.0
+        with:
+          ruby-version: "3.4"
+          bundler-cache: true
+
+      # Loads every formula/cask against the recording Homebrew DSL stub in
+      # spec/, executing every line (the stub cycles all platform branches
+      # - see spec/support/homebrew_dsl_stub.rb). Real behavior stays the
+      # job of brew test in brew-formula-test.yml.
+      - name: Run formula/cask coverage harness
+        run: bundle exec rspec
+
+      # Publishes the lcov report the harness emits; authenticates with a
+      # per-run OIDC token (via id-token: write above) instead of a
+      # standing CODECOV_TOKEN secret (same pattern as ctm) - nothing to
+      # rotate, nothing to expire a year from now.
+      # fail_ci_if_error: codecov swallows upload failures by default, and
+      # the codecov checks are informational, so a fail-green upload would
+      # silently stop coverage reports from ever arriving.
+      - name: Upload coverage to Codecov
+        # fork PRs and Dependabot runs can't mint OIDC tokens (GitHub
+        # restricts id-token: write for both), so skip the doomed attempt;
+        # same-repo PRs (incl. Renovate branches) and pushes to main still run
+        if: (github.event.pull_request.head.repo.full_name == github.repository || github.event_name == 'push') && github.actor != 'dependabot[bot]'
+        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
+        with:
+          files: coverage/lcov.info
+          use_oidc: true
+          fail_ci_if_error: true
+          disable_search: true

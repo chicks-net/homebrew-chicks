@@ -1,0 +1,27 @@
+# codecov.yml - Codecov posture for the formula/cask coverage harness
+#
+# Coverage uploads come from .github/workflows/ruby-tests.yml: RSpec loads
+# each formula/cask against the recording Homebrew DSL stub in spec/ and
+# SimpleCov emits coverage/lcov.info, uploaded tokenless via OIDC (the
+# Codecov GitHub App is installed on chicks-net).
+#
+# Statuses are informational until a baseline accumulates on main - the
+# same lesson ctm's issue #70 recorded (thresholds were deferred there
+# until real data existed; guessing them cold only makes PRs red on
+# noise). Tighten project/patch targets in a follow-up once a few merges
+# of coverage reports settle, and keep a cushion below whatever the
+# harness actually reports.
+coverage:
+  status:
+    project:
+      default:
+        informational: true
+    patch:
+      default:
+        informational: true
+
+# The stub and the specs are infrastructure; the lcov report only
+# contains Formula/ and Casks/ (SimpleCov filters spec/ out), and this
+# keeps codecov's PR-comment file list from ever drifting there.
+ignore:
+  - spec/
