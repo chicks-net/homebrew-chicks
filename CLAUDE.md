@@ -75,19 +75,6 @@ This command:
 6. Runs strict audit: `brew audit --strict --online chicks-text-tools`
 7. Runs style check: `brew style Formula/*.rb`
 
-### Ruby Coverage Harness
-
-`spec/` holds an RSpec suite that loads every formula and cask against a
-recording stub of the Homebrew DSL, executing every Ruby line - including
-all four os/cpu platform branches via the stub's arch cycling. CI runs it
-in `.github/workflows/ruby-tests.yml` and uploads SimpleCov's lcov report
-to Codecov with tokenless OIDC auth. It is execution coverage only;
-`brew test` remains the source of truth for real behavior. Local run:
-
-```bash
-brew install ruby && bundle install && bundle exec rspec
-```
-
 To uninstall:
 
 ```bash
@@ -156,6 +143,19 @@ To validate the Brewfile without installing:
 
 ```bash
 just validate-brewfile
+```
+
+### Ruby Coverage Harness
+
+`spec/` holds an RSpec suite that loads every formula and cask against a
+recording stub of the Homebrew DSL, executing every Ruby line - including
+all four os/cpu platform branches via the stub's arch cycling. CI runs it
+in `.github/workflows/ruby-tests.yml` and uploads SimpleCov's lcov report
+to Codecov with tokenless OIDC auth. It is execution coverage only;
+`brew test` remains the source of truth for real behavior. Local run:
+
+```bash
+brew install ruby && bundle install && bundle exec rspec
 ```
 
 ## Creating New Formula Files

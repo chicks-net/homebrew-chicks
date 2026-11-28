@@ -6,9 +6,11 @@
 # executes every executable line, which keeps Ruby's per-load coverage
 # counters from dropping lines no matter which example runs last.
 
-RSpec.describe "formula coverage harness" do
-  FORMULA_DIR = File.expand_path("../Formula", __dir__)
+# Local variables (not constants: constants assigned inside a describe
+# block land on top-level Object and warn on re-definition).
+formula_dir = File.expand_path("../Formula", __dir__)
 
+RSpec.describe "formula coverage harness" do
   # Homebrew file-name -> class-name mapping: ctm.rb -> Ctm,
   # chicks-text-tools.rb -> ChicksTextTools
   def classify(path)
@@ -26,19 +28,22 @@ RSpec.describe "formula coverage harness" do
   end
 
   # First install runs with the real File.exist? (prebuilt-release path);
-  # the second forces it true so any source-build fallback (ctm.rb's
-  # `go build` branch) executes too.
+  # the second forces ctm.rb's source-marker ("main.go") to exist so any
+  # source-build fallback executes too. The stub is narrow on purpose -
+  # File.exist? for anything else calls through to the original - so
+  # RSpec/SimpleCov internals are never lied to.
   def run_formula(klass)
     formula = klass.new
     formula.install
-    allow(File).to receive(:exist?).and_return(true)
+    allow(File).to receive(:exist?).and_call_original
+    allow(File).to receive(:exist?).with("main.go").and_return(true)
     formula.install
     formula.instance_exec(&klass.test_block) if klass.test_block
     formula.caveats if formula.respond_to?(:caveats)
     formula
   end
 
-  Dir[File.join(FORMULA_DIR, "*.rb")].sort.each do |path|
+  Dir[File.join(formula_dir, "*.rb")].sort.each do |path|
     describe File.basename(path) do
       it "executes every line, all platform branches included" do
         klass = load_formula(path)
@@ -67,21 +72,25 @@ RSpec.describe "formula coverage harness" do
   end
 
   # ctm.rb is the one formula with real per-platform branching. All four
-  # prebuilt release binaries are declared, so `go` never becomes a build
-  # dependency - if a future edit drops a prebuilt arch, this fails.
+  # prebuilt release binaries must be declared, so `go` never becomes a
+  # build dependency - if a future edit drops a prebuilt arch, this fails.
+  # The assertions are structural (not version-pinned) so a routine ctm
+  # version bump does not need spec surgery.
   describe "ctm.rb platform matrix" do
     it "declares all four prebuilt binaries so go is never a build dep" do
-      klass = load_formula(File.join(FORMULA_DIR, "ctm.rb"))
+      klass = load_formula(File.join(formula_dir, "ctm.rb"))
       run_formula(klass)
 
       urls = klass.dsl_calls[:url].map { |args, _kwargs| args.first }
-      expect(urls).to contain_exactly(
-        "https://github.com/chicks-net/ctm/archive/refs/tags/v0.3.1.tar.gz",
-        "https://github.com/chicks-net/ctm/releases/download/v0.2/ctm-darwin-arm64",
-        "https://github.com/chicks-net/ctm/releases/download/v0.2/ctm-darwin-amd64",
-        "https://github.com/chicks-net/ctm/releases/download/v0.2/ctm-linux-arm64",
-        "https://github.com/chicks-net/ctm/releases/download/v0.2/ctm-linux-amd64",
-      )
+      prebuilts = urls.grep(%r{/releases/download/v[\d.]+/ctm-(?:darwin|linux)-(?:arm64|amd64)\z})
+      expect(prebuilts.map { |u| u[%r{ctm-(\S+)\z}, 1] })
+        .to contain_exactly("darwin-arm64", "darwin-amd64", "linux-arm64", "linux-amd64")
+      # the remaining url is the source tarball
+      expect(urls.size).to eq(prebuilts.size + 1)
+      expect(urls.size).to eq(5)
+
+      # one checksum per url
+      expect(klass.dsl_calls[:sha256].length).to eq(5)
       expect(klass.dsl_calls[:depends_on]).to be_empty
     end
   end
@@ -90,7 +99,7 @@ RSpec.describe "formula coverage harness" do
   # in pkgshare with the expected shape.
   describe "chicks-desktop.rb generated files" do
     it "writes a setup script and a Brewfile into pkgshare" do
-      klass = load_formula(File.join(FORMULA_DIR, "chicks-desktop.rb"))
+      klass = load_formula(File.join(formula_dir, "chicks-desktop.rb"))
       run_formula(klass)
 
       paths = HomebrewStub.file_writes.map(&:first)

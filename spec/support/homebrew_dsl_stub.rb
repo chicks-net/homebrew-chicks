@@ -282,16 +282,20 @@ module HomebrewStub
       @registered_casks = {}
     end
 
-    # Run the block once per arch in arches, restoring the previous arch.
-    # This is what lets a single load of ctm.rb execute all four of its
-    # url/sha256 branches.
+    # Run the block once per arch in arches, restoring the previous arch -
+    # via ensure, so a raising block cannot leak a fake arch into later
+    # examples. This is what lets a single load of ctm.rb execute all
+    # four of its url/sha256 branches.
     def with_arch(arches)
       previous = @arch
       arches.each do |arch|
         @arch = arch
-        yield
+        begin
+          yield
+        ensure
+          @arch = previous
+        end
       end
-      @arch = previous
     end
 
     def system_log

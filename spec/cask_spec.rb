@@ -5,10 +5,12 @@
 # install if/else takes both branches on every load), uninstall_postflight,
 # and the test block.
 
-RSpec.describe "cask coverage harness" do
-  CASK_DIR = File.expand_path("../Casks", __dir__)
+# Local variable (not a constant: constants assigned inside a describe
+# block land on top-level Object and warn on re-definition).
+cask_dir = File.expand_path("../Casks", __dir__)
 
-  Dir[File.join(CASK_DIR, "*.rb")].sort.each do |path|
+RSpec.describe "cask coverage harness" do
+  Dir[File.join(cask_dir, "*.rb")].sort.each do |path|
     describe File.basename(path) do
       it "executes every line, both postflight branches included" do
         HomebrewStub.reset!
